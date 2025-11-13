@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Discord Clone</title>
+    <link rel="stylesheet" href="login-styles.css">
+</head>
+<body>
+    <!-- ============================================
+         LOGIN/SIGNUP PAGE
+         ============================================ -->
+    <div class="auth-container">
+        <!-- Background Decoration -->
+        <div class="bg-decoration"></div>
+        
+        <!-- Main Auth Card -->
+        <div class="auth-card">
+            <!-- Logo/Title -->
+            <div class="auth-header">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">We're so excited to see you again!</p>
+            </div>
+
+            <!-- LOGIN FORM (Default View) -->
+            <div id="login-form" class="auth-form active">
+                <form id="loginForm">
+                    <!-- Email/Username Field -->
+                    <div class="form-group">
+                        <label for="login-email" class="form-label">
+                            EMAIL OR USERNAME
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="login-email" 
+                            class="form-input"
+                            placeholder="Enter your email or username"
+                            required
+                            autocomplete="username"
+                        />
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="login-password" class="form-label">
+                            PASSWORD
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="login-password" 
+                            class="form-input"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password"
+                        />
+                        <a href="#" class="forgot-password">Forgot your password?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Log In</span>
+                        <span class="btn-loader"></span>
+                    </button>
+
+                    <!-- Sign Up Link -->
+                    <div class="auth-switch">
+                        <span class="switch-text">Need an account?</span>
+                        <button type="button" class="switch-link" data-switch="signup">
+                            Register
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SIGNUP FORM (Hidden by default) -->
+            <div id="signup-form" class="auth-form">
+                <form id="signupForm">
+                    <!-- Name Field -->
+                    <div class="form-group">
+                        <label for="signup-name" class="form-label">
+                            FULL NAME
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="signup-name" 
+                            class="form-input"
+                            placeholder="Enter your full name"
+                            required
+                            autocomplete="name"
+                        />
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="signup-email" class="form-label">
+                            EMAIL
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="signup-email" 
+                            class="form-input"
+                            placeholder="Enter your email"
+                            required
+                            autocomplete="email"
+                        />
+                    </div>
+
+                    <!-- Username Field -->
+                    <div class="form-group">
+                        <label for="signup-username" class="form-label">
+                            USERNAME
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="signup-username" 
+                            class="form-input"
+                            placeholder="Choose a username"
+                            required
+                            autocomplete="username"
+                        />
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="signup-password" class="form-label">
+                            PASSWORD
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="signup-password" 
+                            class="form-input"
+                            placeholder="Create a password (min. 6 characters)"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                        />
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div class="form-group">
+                        <label for="signup-password-confirm" class="form-label">
+                            CONFIRM PASSWORD
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="signup-password-confirm" 
+                            class="form-input"
+                            placeholder="Confirm your password"
+                            required
+                            autocomplete="new-password"
+                        />
+                        <span id="password-match" class="password-match"></span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Create Account</span>
+                        <span class="btn-loader"></span>
+                    </button>
+
+                    <!-- Login Link -->
+                    <div class="auth-switch">
+                        <span class="switch-text">Already have an account?</span>
+                        <button type="button" class="switch-link" data-switch="login">
+                            Log In
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Error/Success Message -->
+            <div id="auth-message" class="auth-message"></div>
+        </div>
+    </div>
+
+    <script src="../controllers/login-script.js"></script>
+</body>
+</html>
+
+
+
