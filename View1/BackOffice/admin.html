@@ -21,38 +21,38 @@
             </div>
 
             <nav class="sidebar-nav">
-                <a href="#dashboard" class="nav-link active" onclick="switchSection('dashboard')">
+                <a href="#dashboard-section" class="nav-link active" data-section-target="dashboard-section">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a href="#users" class="nav-link" onclick="switchSection('users')">
+                <a href="#users-section" class="nav-link" data-section-target="users-section">
                     <span class="nav-icon">👥</span>
                     <span class="nav-text">Users</span>
                 </a>
-                <a href="#servers" class="nav-link" onclick="switchSection('servers')">
+                <a href="#servers-section" class="nav-link" data-section-target="servers-section">
                     <span class="nav-icon">💬</span>
                     <span class="nav-text">Servers</span>
                 </a>
-                <a href="#messages" class="nav-link" onclick="switchSection('messages')">
+                <a href="#messages-section" class="nav-link" data-section-target="messages-section">
                     <span class="nav-icon">💌</span>
                     <span class="nav-text">Messages</span>
                 </a>
-                <a href="#streams" class="nav-link" onclick="switchSection('streams')">
+                <a href="#streams-section" class="nav-link" data-section-target="streams-section">
                     <span class="nav-icon">📺</span>
                     <span class="nav-text">Streams</span>
                 </a>
-                <a href="#posts" class="nav-link" onclick="switchSection('posts')">
+                <a href="#posts-section" class="nav-link" data-section-target="posts-section">
                     <span class="nav-icon">🐦</span>
                     <span class="nav-text">Posts</span>
                 </a>
-                <a href="#settings" class="nav-link" onclick="switchSection('settings')">
+                <a href="#settings-section" class="nav-link" data-section-target="settings-section">
                     <span class="nav-icon">⚙️</span>
                     <span class="nav-text">Settings</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <button class="logout-btn" onclick="handleAdminLogout()">
+                <button class="logout-btn" type="button" data-template-action="admin-logout">
                     <span class="nav-icon">🚪</span>
                     <span class="nav-text">Logout</span>
                 </button>
@@ -74,7 +74,7 @@
                         <input type="text" placeholder="Search..." id="admin-search" class="search-input" />
                         <span class="search-icon">🔍</span>
                     </div>
-                    <button class="refresh-btn" onclick="refreshData()" title="Refresh Data">
+                    <button class="refresh-btn" type="button" title="Refresh Data" data-template-action="refresh">
                         🔄
                     </button>
                 </div>
@@ -168,7 +168,27 @@
                     <div class="chart-card">
                         <h3 class="chart-title">Activity Overview</h3>
                         <div class="activity-list" id="activity-list">
-                            <!-- Activity items will be inserted here -->
+                            <div class="activity-item" data-template-item="activity">
+                                <div class="activity-icon">👤</div>
+                                <div class="activity-content">
+                                    <p class="activity-text"><strong>NovaXR</strong> joined the server <strong>#Gaming Hub</strong>.</p>
+                                    <p class="activity-time">2 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item" data-template-item="activity">
+                                <div class="activity-icon">💬</div>
+                                <div class="activity-content">
+                                    <p class="activity-text"><strong>Skyler</strong> posted 14 new messages in <strong>#general</strong>.</p>
+                                    <p class="activity-time">12 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item" data-template-item="activity">
+                                <div class="activity-icon">📺</div>
+                                <div class="activity-content">
+                                    <p class="activity-text"><strong>AveryLive</strong> started streaming "Nightly Q&amp;A".</p>
+                                    <p class="activity-time">25 minutes ago</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,7 +197,7 @@
                 <div class="table-card">
                     <div class="table-header">
                         <h3 class="table-title">Recent Activity</h3>
-                        <button class="view-all-btn" onclick="switchSection('messages')">View All</button>
+                        <button class="view-all-btn" type="button" data-section-target="messages-section">View All</button>
                     </div>
                     <div class="table-container">
                         <table class="data-table">
@@ -190,7 +210,24 @@
                                 </tr>
                             </thead>
                             <tbody id="recent-activity-table">
-                                <!-- Table rows will be inserted here -->
+                                <tr data-template-row="recent-activity">
+                                    <td>Kai Parker</td>
+                                    <td>Created server</td>
+                                    <td>"Design Squad" • 4 channels</td>
+                                    <td>09:24</td>
+                                </tr>
+                                <tr data-template-row="recent-activity">
+                                    <td>Mila Rivers</td>
+                                    <td>Reported message</td>
+                                    <td>#announcements • reason: spam</td>
+                                    <td>08:57</td>
+                                </tr>
+                                <tr data-template-row="recent-activity">
+                                    <td>Ethan Lee</td>
+                                    <td>Started stream</td>
+                                    <td>"Speedrunning Retro Classics"</td>
+                                    <td>08:41</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -201,14 +238,14 @@
             <section id="users-section" class="content-section">
                 <div class="section-header">
                     <h2 class="section-title">User Management</h2>
-                    <button class="add-btn" onclick="showAddUserModal()">+ Add User</button>
+                    <button class="add-btn" type="button" data-template-action="open-add-user">+ Add User</button>
                 </div>
 
                 <!-- Users Filter/Search -->
                 <div class="filter-bar">
                     <div class="filter-group">
                         <label>Filter:</label>
-                        <select id="user-filter" class="filter-select" onchange="filterUsers()">
+                        <select id="user-filter" class="filter-select" data-template-field="user-filter">
                             <option value="all">All Users</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
@@ -217,7 +254,7 @@
                     </div>
                     <div class="filter-group">
                         <label>Sort:</label>
-                        <select id="user-sort" class="filter-select" onchange="sortUsers()">
+                        <select id="user-sort" class="filter-select" data-template-field="user-sort">
                             <option value="newest">Newest First</option>
                             <option value="oldest">Oldest First</option>
                             <option value="name">By Name</option>
@@ -242,7 +279,36 @@
                                 </tr>
                             </thead>
                             <tbody id="users-table">
-                                <!-- User rows will be inserted here -->
+                                <tr data-template-row="user">
+                                    <td>#4821</td>
+                                    <td>
+                                        <strong>NovaXR</strong><br>
+                                        <small>@nova</small>
+                                    </td>
+                                    <td>nova@example.com</td>
+                                    <td>Nov 12, 2025</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>1,248</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Edit</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="user">
+                                    <td>#3905</td>
+                                    <td>
+                                        <strong>Mila Rivers</strong><br>
+                                        <small>@mila</small>
+                                    </td>
+                                    <td>mila@example.com</td>
+                                    <td>Oct 28, 2025</td>
+                                    <td><span class="status-badge status-inactive">Pending Review</span></td>
+                                    <td>312</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Edit</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -250,9 +316,9 @@
 
                 <!-- Pagination -->
                 <div class="pagination">
-                    <button class="page-btn" onclick="changePage(-1)">← Previous</button>
+                    <button class="page-btn" type="button" data-template-action="page-prev">← Previous</button>
                     <span class="page-info">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
-                    <button class="page-btn" onclick="changePage(1)">Next →</button>
+                    <button class="page-btn" type="button" data-template-action="page-next">Next →</button>
                 </div>
             </section>
 
@@ -260,11 +326,52 @@
             <section id="servers-section" class="content-section">
                 <div class="section-header">
                     <h2 class="section-title">Server Management</h2>
-                    <button class="add-btn" onclick="showAddServerModal()">+ Add Server</button>
+                    <button class="add-btn" type="button" data-template-action="open-add-server">+ Add Server</button>
                 </div>
 
                 <div class="cards-grid" id="servers-grid">
-                    <!-- Server cards will be inserted here -->
+                    <article class="server-card" data-template-item="server">
+                        <div class="server-card-header">
+                            <div class="server-icon-sm">🎮</div>
+                            <div>
+                                <h3 class="server-name">Gaming Hub</h3>
+                                <p class="server-meta">14 channels • 1.2K members</p>
+                            </div>
+                            <span class="status-badge status-active">Live</span>
+                        </div>
+                        <div class="server-card-body">
+                            <p>Weekly tournaments, voice rooms, and coaching sessions.</p>
+                            <div class="server-card-stats">
+                                <span><strong>320</strong> online</span>
+                                <span><strong>42</strong> boosts</span>
+                            </div>
+                        </div>
+                        <div class="server-card-actions">
+                            <button class="action-btn btn-edit" type="button">Edit</button>
+                            <button class="action-btn btn-delete" type="button">Archive</button>
+                        </div>
+                    </article>
+                    <article class="server-card" data-template-item="server">
+                        <div class="server-card-header">
+                            <div class="server-icon-sm">🎨</div>
+                            <div>
+                                <h3 class="server-name">Creative Collective</h3>
+                                <p class="server-meta">9 channels • 640 members</p>
+                            </div>
+                            <span class="status-badge status-inactive">Quiet</span>
+                        </div>
+                        <div class="server-card-body">
+                            <p>Design critiques, mood-board swaps, and feedback threads.</p>
+                            <div class="server-card-stats">
+                                <span><strong>84</strong> online</span>
+                                <span><strong>8</strong> boosts</span>
+                            </div>
+                        </div>
+                        <div class="server-card-actions">
+                            <button class="action-btn btn-edit" type="button">Edit</button>
+                            <button class="action-btn btn-delete" type="button">Archive</button>
+                        </div>
+                    </article>
                 </div>
             </section>
 
@@ -289,7 +396,30 @@
                                 </tr>
                             </thead>
                             <tbody id="messages-table">
-                                <!-- Message rows will be inserted here -->
+                                <tr data-template-row="message">
+                                    <td>#9824</td>
+                                    <td>NovaXR</td>
+                                    <td>“Launching a new build tonight, feedback welcome!”</td>
+                                    <td>Gaming Hub</td>
+                                    <td>#general</td>
+                                    <td>09:12</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Review</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="message">
+                                    <td>#9825</td>
+                                    <td>PixelSmith</td>
+                                    <td>Uploaded 4 new reference shots.</td>
+                                    <td>Creative Collective</td>
+                                    <td>#showcase</td>
+                                    <td>08:48</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Review</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -317,7 +447,28 @@
                                 </tr>
                             </thead>
                             <tbody id="streams-table">
-                                <!-- Stream rows will be inserted here -->
+                                <tr data-template-row="stream">
+                                    <td>#210</td>
+                                    <td>AveryLive</td>
+                                    <td>Nightly AMA &amp; Chill</td>
+                                    <td>2,140</td>
+                                    <td><span class="status-badge status-active">Live</span></td>
+                                    <td>08:40</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Details</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="stream">
+                                    <td>#198</td>
+                                    <td>LunaFPS</td>
+                                    <td>Ranked Sprint</td>
+                                    <td>986</td>
+                                    <td><span class="status-badge status-inactive">Ended</span></td>
+                                    <td>Yesterday</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Details</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -345,7 +496,30 @@
                                 </tr>
                             </thead>
                             <tbody id="posts-table">
-                                <!-- Post rows will be inserted here -->
+                                <tr data-template-row="post">
+                                    <td>#840</td>
+                                    <td>Alex Lee</td>
+                                    <td>“Template UI is ready for backend wiring!”</td>
+                                    <td>230</td>
+                                    <td>58</td>
+                                    <td>2h ago</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">View</button>
+                                        <button class="action-btn btn-delete" type="button">Hide</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="post">
+                                    <td>#838</td>
+                                    <td>Emery Moss</td>
+                                    <td>“Looking for beta testers this weekend.”</td>
+                                    <td>74</td>
+                                    <td>12</td>
+                                    <td>5h ago</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">View</button>
+                                        <button class="action-btn btn-delete" type="button">Hide</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -389,9 +563,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Add New User</h3>
-                <button class="modal-close" onclick="closeModal('add-user-modal')">×</button>
+                <button class="modal-close" type="button" data-template-action="close-modal" data-modal="add-user-modal">×</button>
             </div>
-            <form class="modal-form" onsubmit="handleAddUser(event)">
+            <form class="modal-form" action="#" method="post" data-template-form="add-user">
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" class="form-input" required />
@@ -409,14 +583,13 @@
                     <input type="password" class="form-input" required />
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" onclick="closeModal('add-user-modal')">Cancel</button>
+                    <button type="button" class="btn-cancel" data-template-action="close-modal" data-modal="add-user-modal">Cancel</button>
                     <button type="submit" class="btn-submit">Add User</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="../controllers/admin-script.js"></script>
 </body>
 </html>
 

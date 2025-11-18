@@ -1,52 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ============================================
-         HEAD SECTION
-         Lines 1-10
-         ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Clone - Simple Template</title>
-    
-    <!-- Link to external CSS file -->
+    <title>Discord Clone - Visual Template</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- ============================================
-         TOP NAVIGATION BAR
-         Lines 11-30
-         Fixed navigation at the top with 3 buttons:
-         - Servers (Discord-style chat)
-         - Stream (Twitch-style streaming)
-         - Feed (Twitter-style feed)
+         TOP NAVIGATION TEMPLATE
+         Use the data-page-target attribute to hook your JS
          ============================================ -->
-    <nav class="top-nav">
+    <nav class="top-nav" aria-label="Primary navigation">
         <div class="nav-container">
-            <!-- Servers Button - Opens Discord-style chat page -->
-            <div class="nav-item active" onclick="showPage('servers', this)">
+            <a class="nav-item active" id="servers-nav" href="#servers-page" data-page-target="servers-page">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                               d="M7 8h10M7 12h6m8-1a9 9 0 10-4.5 7.8l3.6 1.2a1 1 0 001.3-1.1l-.6-3A8.9 8.9 0 0021 11z"/>
                     </svg>
                 </div>
-                <div class="nav-label">Servers</div>
-            </div>
-            
-            <!-- Stream Button - Opens Twitch-style streaming page -->
-            <div class="nav-item" onclick="showPage('stream', this)">
+                <span class="nav-label">Servers</span>
+            </a>
+            <a class="nav-item" href="#stream-page" data-page-target="stream-page">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                               d="M4 6a2 2 0 012-2h12a2 2 0 012 2v9a2 2 0 01-2 2h-3l-4.5 3a1 1 0 01-1.5-.86V17H6a2 2 0 01-2-2V6z"/>
                     </svg>
                 </div>
-                <div class="nav-label">Stream</div>
-            </div>
-
-            <!-- Marketplace Button - Opens Facebook-style marketplace page -->
-            <div class="nav-item" onclick="showPage('marketplace', this)">
+                <span class="nav-label">Stream</span>
+            </a>
+            <a class="nav-item" href="#marketplace-page" data-page-target="marketplace-page">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
@@ -55,19 +40,17 @@
                               d="M3 9h18M8 13h1.5a1.5 1.5 0 011.5 1.5V20M14 20v-5.5A1.5 1.5 0 0115.5 13H17"/>
                     </svg>
                 </div>
-                <div class="nav-label">Marketplace</div>
-            </div>
-            
-            <!-- Feed Button - Opens Twitter-style feed page -->
-            <div class="nav-item" onclick="showPage('feed', this)">
+                <span class="nav-label">Marketplace</span>
+            </a>
+            <a class="nav-item" href="#feed-page" data-page-target="feed-page">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                               d="M21 5.92a6.55 6.55 0 01-1.89.52 3.3 3.3 0 001.45-1.82 6.59 6.59 0 01-2.07.8 3.28 3.28 0 00-5.6 2.24 3.4 3.4 0 00.08.75A9.31 9.31 0 013 5.16a3.29 3.29 0 001.02 4.38 3.23 3.23 0 01-1.48-.41v.04a3.29 3.29 0 002.63 3.22 3.3 3.3 0 01-1.47.06 3.29 3.29 0 003.07 2.28A6.58 6.58 0 013 17.54 9.29 9.29 0 008.05 19c6.29 0 9.73-5.22 9.73-9.75q0-.23-.01-.45A6.97 6.97 0 0021 5.92z"/>
                     </svg>
                 </div>
-                <div class="nav-label">Feed</div>
-            </div>
+                <span class="nav-label">Feed</span>
+            </a>
         </div>
     </nav>
 
@@ -77,142 +60,133 @@
          Container for all pages (servers, stream, feed)
          Only one page is visible at a time
          ============================================ -->
-    <div class="main-wrapper">
-        
+    <main class="main-wrapper">
         <!-- ============================================
-             SERVERS PAGE (Discord-style)
-             Lines 35-120
-             Three-column layout: servers sidebar, channels sidebar, chat area
+             SERVERS PAGE TEMPLATE
              ============================================ -->
-        <div id="servers-page" class="page active">
+        <section id="servers-page" class="page active" data-template-section="servers">
             <div class="servers-page">
-                
-                <!-- Servers Sidebar (Left) - List of server icons -->
-                <div class="servers-sidebar">
-                    <!-- Home Server Icon -->
-                    <div class="server-icon home active" onclick="chooseServer('home', this)" title="Home">
+                <aside class="servers-sidebar" aria-label="Servers list">
+                    <button class="server-icon home active" type="button" data-server="home" aria-pressed="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                   d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6h-4v6H5a1 1 0 01-1-1z"/>
                         </svg>
-                    </div>
-                    <div class="divider"></div>
-                    
-                    <!-- General Server Icon -->
-                    <div class="server-icon green" onclick="chooseServer('general', this)" title="General">
+                    </button>
+                    <div class="divider" aria-hidden="true"></div>
+                    <button class="server-icon green" type="button" data-server="general">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                   d="M7 8h10M7 12h6m10-1a9 9 0 11-4.5-7.8l3.6-1.2a1 1 0 011.3 1.1l-.6 3A8.9 8.9 0 0123 11z"/>
                         </svg>
-                    </div>
-                    
-                    <!-- Gaming Server Icon -->
-                    <div class="server-icon purple" onclick="chooseServer('gaming', this)" title="Gaming">
+                    </button>
+                    <button class="server-icon purple" type="button" data-server="gaming">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                   d="M6.5 8h11a3.5 3.5 0 013.5 3.5V14a4 4 0 01-4 4h-1.1l-.9 1a2 2 0 01-3 0l-.9-1H8a4 4 0 01-4-4v-2.5A3.5 3.5 0 016.5 8z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                   d="M8.5 12h-3m1.5-1.5v3M17.75 12.75h.01M20 10h.01"/>
                         </svg>
-                    </div>
-                    
-                    <!-- Music Server Icon -->
-                    <div class="server-icon pink" onclick="chooseServer('music', this)" title="Music">
+                    </button>
+                    <button class="server-icon pink" type="button" data-server="music">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                   d="M9 18a3 3 0 11-2-2.82V6.5a1 1 0 01.79-.98l10-2.2A1 1 0 0119 4.3V14a3 3 0 11-2-2.83V7.2l-8 1.76V18z"/>
                         </svg>
-                    </div>
-                    
-                    <!-- Coding Server Icon -->
-                    <div class="server-icon" style="background-color: #faa61a;" onclick="chooseServer('coding', this)" title="Coding">
+                    </button>
+                    <button class="server-icon" type="button" data-server="coding" style="background-color: #faa61a;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <rect x="3" y="5" width="18" height="12" rx="2" ry="2" stroke-width="1.8"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                   d="M2 17h20M9 21h6"/>
                         </svg>
-                    </div>
-                </div>
+                    </button>
+                </aside>
 
-                <!-- Channels Sidebar (Middle) - List of channels for selected server -->
                 <div class="channels-sidebar">
-                    <!-- Server Name Header -->
                     <div class="channels-header">
                         <h2 id="server-name">Server Name</h2>
                     </div>
-                    
-                    <!-- Channels List -->
                     <div class="channels-list">
                         <div class="channel-section">
                             <div class="channel-section-title">Text Channels</div>
-                            
-                            <!-- General Channel -->
-                            <div class="channel-item active" onclick="chooseChannel('general', this)"><span>general</span></div>
-                            
-                            <!-- Announcements Channel -->
-                            <div class="channel-item" onclick="chooseChannel('announcements', this)"><span>announcements</span></div>
-                            
-                            <!-- Random Channel -->
-                            <div class="channel-item" onclick="chooseChannel('random', this)"><span>random</span></div>
+                            <button class="channel-item active" type="button" data-channel="general" aria-pressed="true">
+                                <span>general</span>
+                            </button>
+                            <button class="channel-item" type="button" data-channel="announcements">
+                                <span>announcements</span>
+                            </button>
+                            <button class="channel-item" type="button" data-channel="random">
+                                <span>random</span>
+                            </button>
                         </div>
                     </div>
-                    
-                    <!-- User Info Footer -->
                     <div class="user-info">
                         <div class="user-avatar" id="user-avatar">U</div>
                         <div class="user-details">
                             <div class="user-name" id="user-name">Username</div>
                             <div class="user-id" id="user-id">#1234</div>
                         </div>
-                        <button class="logout-btn" onclick="logOutUser()" title="Logout" style="background: none; border: none; color: #8e9297; cursor: pointer; padding: 4px; border-radius: 4px; transition: all 0.2s;">
+                        <button class="logout-btn" type="button" title="Logout" data-template-action="logout">
                             🚪
                         </button>
                     </div>
                 </div>
 
-                <!-- Chat Area (Right) - Messages display and input -->
-                <div class="chat-area">
-                    <!-- Channel Header -->
+                <section class="chat-area" aria-live="polite">
                     <div class="content-header">
                         <h2 id="channel-name">general</h2>
                     </div>
-                    
-                    <!-- Messages Container - Messages are inserted here by JavaScript -->
                     <div class="content-body">
                         <div class="messages-container" id="messages-container">
-                            <!-- Messages will be inserted here by JavaScript (see script.js renderMessages function) -->
+                            <article class="message" data-template-item="message">
+                                <div class="message-avatar">JD</div>
+                                <div class="message-content">
+                                    <header class="message-header">
+                                        <span class="message-username">Jane Doe</span>
+                                        <time class="message-time" datetime="2025-11-18T14:03">Today • 14:03</time>
+                                    </header>
+                                    <p class="message-text">
+                                        Welcome to the server! Replace this placeholder with live data once your JS/PHP logic is ready.
+                                    </p>
+                                </div>
+                            </article>
+                            <article class="message" data-template-item="message">
+                                <div class="message-avatar">MS</div>
+                                <div class="message-content">
+                                    <header class="message-header">
+                                        <span class="message-username">Mason Silva</span>
+                                        <time class="message-time" datetime="2025-11-18T14:10">Today • 14:10</time>
+                                    </header>
+                                    <p class="message-text">
+                                        Use the `#messages-container` element to render chat history from your backend.
+                                    </p>
+                                </div>
+                            </article>
                         </div>
                     </div>
-                    
-                    <!-- Message Input Area -->
                     <div class="input-area">
                         <div class="input-container">
-                            <!-- Add Attachment Button -->
                             <button class="input-btn" type="button" aria-label="Add attachment">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                           d="M12 5v14m7-7H5"/>
                                 </svg>
                             </button>
-                            
-                            <!-- Message Input Field -->
                             <input 
                                 type="text" 
                                 class="input-field" 
                                 id="message-input"
                                 placeholder="Message #general"
-                                onkeypress="messageFieldKeyPress(event)"
+                                data-template-field="message"
+                                autocomplete="off"
                             />
-                            
-                            <!-- Attachment Button -->
                             <button class="input-btn" type="button" aria-label="Upload file">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                           d="M18.364 5.636a4 4 0 010 5.657l-7.071 7.071a4 4 0 01-5.657-5.657l7.07-7.071a2.5 2.5 0 013.536 3.536l-6.364 6.364"/>
                                 </svg>
                             </button>
-                            
-                            <!-- Emoji Button -->
                             <button class="input-btn" type="button" aria-label="Add emoji">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <circle cx="12" cy="12" r="9" stroke-width="1.8"/>
@@ -220,45 +194,75 @@
                                           d="M8 15s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
                                 </svg>
                             </button>
-                            
-                            <!-- Send Button -->
-                            <button class="send-btn" onclick="submitMessage()">Send</button>
+                            <button class="send-btn" type="button" data-template-action="send-message">Send</button>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
-        </div>
+        </section>
 
         <!-- ============================================
-             STREAM PAGE (Twitch-style)
-             Lines 125-150
-             Grid layout with search bar and stream cards
+             STREAM PAGE TEMPLATE
              ============================================ -->
-        <div id="stream-page" class="page">
+        <section id="stream-page" class="page" data-template-section="stream">
             <div class="stream-page">
-                
-                <!-- Search Bar - Search for streamers -->
                 <div class="stream-search-container">
                     <input 
-                        type="text" 
+                        type="search" 
                         class="stream-search" 
                         id="stream-search"
                         placeholder="Search for streamers..."
-                        onkeyup="filterStreamsByText(this.value)"
+                        data-template-field="stream-search"
+                        autocomplete="off"
                     />
                 </div>
-
-                <!-- Streams Grid - Stream cards are inserted here by JavaScript -->
                 <div class="streams-grid" id="streams-grid">
-                    <!-- Stream cards will be inserted here by JavaScript (see script.js renderStreams function) -->
+                    <article class="stream-card" data-template-item="stream">
+                        <div class="stream-thumbnail">
+                            <span class="live-badge"><span class="live-dot"></span> LIVE</span>
+                            <div class="viewer-count">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                12.4K
+                            </div>
+                        </div>
+                        <div class="stream-info">
+                            <p class="stream-title">Building a Discord Clone UI</p>
+                            <p class="streamer-name">Avery Codes</p>
+                            <p class="stream-game">Creative</p>
+                        </div>
+                    </article>
+                    <article class="stream-card" data-template-item="stream">
+                        <div class="stream-thumbnail">
+                            <div class="viewer-count">2.1K</div>
+                        </div>
+                        <div class="stream-info">
+                            <p class="stream-title">Competitive FPS Grind</p>
+                            <p class="streamer-name">LunaFPS</p>
+                            <p class="stream-game">Gaming</p>
+                        </div>
+                    </article>
+                    <article class="stream-card" data-template-item="stream">
+                        <div class="stream-thumbnail">
+                            <div class="viewer-count">980</div>
+                        </div>
+                        <div class="stream-info">
+                            <p class="stream-title">Lo-fi Chill & Code</p>
+                            <p class="streamer-name">SynthWave</p>
+                            <p class="stream-game">Music</p>
+                        </div>
+                    </article>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- ============================================
-             MARKETPLACE PAGE (Facebook-style)
+             MARKETPLACE PAGE TEMPLATE
              ============================================ -->
-        <div id="marketplace-page" class="page">
+        <section id="marketplace-page" class="page" data-template-section="marketplace">
             <div class="marketplace-page">
                 <div class="marketplace-header">
                     <div>
@@ -266,39 +270,81 @@
                         <p class="marketplace-subtitle">Discover unique listings from the community</p>
                     </div>
                     <div class="marketplace-actions">
-                        <div class="marketplace-search">
+                        <label class="marketplace-search">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                       d="M21 21l-4.35-4.35M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"/>
                             </svg>
                             <input 
                                 id="marketplace-search"
-                                type="text" 
+                                type="search" 
                                 placeholder="Search listings, sellers, or categories..."
-                                oninput="updateMarketplaceSearch(this.value)"
+                                data-template-field="marketplace-search"
                                 autocomplete="off"
                             />
-                        </div>
+                        </label>
                         <div class="marketplace-filters">
-                            <button type="button" class="marketplace-filter active" data-category="all" onclick="changeMarketplaceCategory('all', this)">
-                                All
-                            </button>
-                            <button type="button" class="marketplace-filter" data-category="tech" onclick="changeMarketplaceCategory('tech', this)">
-                                Tech
-                            </button>
-                            <button type="button" class="marketplace-filter" data-category="creative" onclick="changeMarketplaceCategory('creative', this)">
-                                Creative
-                            </button>
-                            <button type="button" class="marketplace-filter" data-category="lifestyle" onclick="changeMarketplaceCategory('lifestyle', this)">
-                                Lifestyle
-                            </button>
+                            <button type="button" class="marketplace-filter active" data-category="all">All</button>
+                            <button type="button" class="marketplace-filter" data-category="tech">Tech</button>
+                            <button type="button" class="marketplace-filter" data-category="creative">Creative</button>
+                            <button type="button" class="marketplace-filter" data-category="lifestyle">Lifestyle</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="marketplace-grid" id="marketplace-grid"></div>
-                <div class="marketplace-wallet" id="marketplace-wallet" aria-live="polite"></div>
-                <div class="marketplace-empty" id="marketplace-empty">
+                <div class="marketplace-grid" id="marketplace-grid">
+                    <article class="marketplace-card" data-template-item="listing">
+                        <div class="marketplace-card-media" style="background-image: url('https://images.unsplash.com/photo-1523475472560-d2df97ec485c?auto=format&fit=crop&w=800&q=60');">
+                            <span class="marketplace-card-pill">Tech</span>
+                            <button class="marketplace-favorite" type="button" aria-label="Save listing">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A4.5 4.5 0 016.5 4 4.11 4.11 0 0112 6.09 4.11 4.11 0 0117.5 4 4.5 4.5 0 0122 8.5c0 3.78-3.4 6.86-8.55 11.18z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="marketplace-card-body">
+                            <div class="marketplace-card-price">$320</div>
+                            <h3 class="marketplace-card-title">Custom Mechanical Keyboard</h3>
+                            <p class="marketplace-card-description">Gasket mounted, hot-swappable PCB, lubed switches.</p>
+                            <div class="marketplace-card-meta">
+                                <span class="marketplace-card-seller">By PixelSmith</span>
+                                <span class="marketplace-card-location">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 21s-6-5.33-6-10a6 6 0 1112 0c0 4.67-6 10-6 10z"/>
+                                        <circle cx="12" cy="11" r="2"/>
+                                    </svg>
+                                    Remote
+                                </span>
+                            </div>
+                            <div class="marketplace-card-tags">
+                                <span class="marketplace-card-tag">RGB</span>
+                                <span class="marketplace-card-tag">Hot Swap</span>
+                            </div>
+                            <button class="marketplace-card-action" type="button">Contact Seller</button>
+                        </div>
+                    </article>
+                    <article class="marketplace-card" data-template-item="listing">
+                        <div class="marketplace-card-media" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=60');">
+                            <span class="marketplace-card-pill">Creative</span>
+                        </div>
+                        <div class="marketplace-card-body">
+                            <div class="marketplace-card-price">$120</div>
+                            <h3 class="marketplace-card-title">Streaming Overlay Pack</h3>
+                            <p class="marketplace-card-description">14 scenes, alerts, and widgets ready for OBS.</p>
+                            <button class="marketplace-card-action" type="button">Preview Pack</button>
+                        </div>
+                    </article>
+                </div>
+                <div class="marketplace-wallet" id="marketplace-wallet">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M3 7a2 2 0 012-2h14a2 2 0 012 2v4h-5a3 3 0 000 6h5v0a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <circle cx="16" cy="15" r="1"/>
+                    </svg>
+                    Wallet balance: <strong>$1,280.00</strong>
+                </div>
+                <div class="marketplace-empty" id="marketplace-empty" aria-hidden="true">
                     <div class="marketplace-empty-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
@@ -311,34 +357,28 @@
                     <p>Try adjusting your search or browse another category to discover more items.</p>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- ============================================
-             FEED PAGE (Twitter-style)
-             Lines 155-200
-             Compose box and scrolling feed
+             FEED PAGE TEMPLATE
              ============================================ -->
-        <div id="feed-page" class="page">
+        <section id="feed-page" class="page" data-template-section="feed">
             <div class="feed-page">
                 <div class="feed-container">
-                    
-                    <!-- Compose Box - Create new post -->
                     <div class="compose-box">
                         <div class="compose-header">
                             <div class="compose-avatar">U</div>
                             <div style="flex: 1;">
-                                <!-- Post Input Textarea -->
                                 <textarea 
                                     class="compose-input" 
                                     id="compose-input"
                                     placeholder="What's happening?"
+                                    data-template-field="post-text"
+                                    rows="4"
                                 ></textarea>
                             </div>
                         </div>
-                        
-                        <!-- Compose Actions -->
                         <div class="compose-actions">
-                            <!-- Media Icons -->
                             <div class="compose-icons">
                                 <button type="button" class="compose-icon" aria-label="Add image">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -363,27 +403,106 @@
                                     </svg>
                                 </button>
                             </div>
-                            
-                            <!-- Tweet Button -->
-                    <button class="compose-btn" onclick="addPost()">Tweet</button>
+                            <button class="compose-btn" type="button" data-template-action="share-post">Tweet</button>
                         </div>
                     </div>
-
-                    <!-- Posts Container - Posts are inserted here by JavaScript -->
                     <div class="posts-container" id="posts-container">
-                        <!-- Posts will be inserted here by JavaScript (see script.js renderPosts function) -->
+                        <article class="post" data-template-item="post">
+                            <header class="post-header">
+                                <div class="post-avatar">AL</div>
+                                <div class="post-user-info">
+                                    <p class="post-username">Alex Lee</p>
+                                    <p class="post-handle">@alexcodes · 2h</p>
+                                </div>
+                                <button class="post-more" type="button" aria-label="More options">⋯</button>
+                            </header>
+                            <div class="post-content">
+                                Turning this multi-platform idea into a clean template. Feel free to swap this content with your own feed data.
+                            </div>
+                            <div class="post-actions">
+                                <button class="post-action reply" type="button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M10 9V5a7 7 0 017 7h3l-4 4-4-4h3a4 4 0 00-4-4z"/>
+                                    </svg>
+                                    <span>42</span>
+                                </button>
+                                <button class="post-action retweet" type="button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M17 1l4 4-4 4"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M3 11v-2a4 4 0 014-4h14"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M7 23l-4-4 4-4"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M21 13v2a4 4 0 01-4 4H3"/>
+                                    </svg>
+                                    <span>18</span>
+                                </button>
+                                <button class="post-action like" type="button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A4.5 4.5 0 016.5 4 4.11 4.11 0 0112 6.09 4.11 4.11 0 0117.5 4 4.5 4.5 0 0122 8.5c0 3.78-3.4 6.86-8.55 11.18z"/>
+                                    </svg>
+                                    <span>230</span>
+                                </button>
+                                <button class="post-action share" type="button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M16 6l-4-4-4 4"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 2v13"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </article>
+                        <article class="post" data-template-item="post">
+                            <header class="post-header">
+                                <div class="post-avatar">EM</div>
+                                <div class="post-user-info">
+                                    <p class="post-username">Emery Moss</p>
+                                    <p class="post-handle">@designemery · 5h</p>
+                                </div>
+                                <button class="post-more" type="button" aria-label="More options">⋯</button>
+                            </header>
+                            <div class="post-content">
+                                Marketplace and streams live on the same screen? Love to see cohesive multi-platform hubs.
+                            </div>
+                            <div class="post-actions">
+                                <button class="post-action reply" type="button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M10 9V5a7 7 0 017 7h3l-4 4-4-4h3a4 4 0 00-4-4z"/>
+                                    </svg>
+                                    <span>9</span>
+                                </button>
+                                <button class="post-action like" type="button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A4.5 4.5 0 016.5 4 4.11 4.11 0 0112 6.09 4.11 4.11 0 0117.5 4 4.5 4.5 0 0122 8.5c0 3.78-3.4 6.86-8.55 11.18z"/>
+                                    </svg>
+                                    <span>74</span>
+                                </button>
+                                <button class="post-action share" type="button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M16 6l-4-4-4 4"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 2v13"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </article>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- ============================================
-         JAVASCRIPT
-         Lines 201-210
-         Link to external JavaScript file
-         ============================================ -->
-    <script src="../controllers/script.js"></script>
+        </section>
+    </main>
 </body>
 </html>
 

@@ -35,6 +35,30 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+    color: inherit;
+}
+
+button {
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+}
+
+button:focus-visible {
+    outline: 2px solid rgba(120, 125, 255, 0.6);
+    outline-offset: 2px;
+}
+
+textarea,
+input,
+select {
+    font: inherit;
+}
+
 /* Smooth scrolling for better UX */
 html {
     scroll-behavior: smooth;
@@ -333,6 +357,8 @@ html {
             border-radius: 10px;
             cursor: pointer;
             color: #99a1d4;
+    width: 100%;
+    text-align: left;
             font-size: 14px;
             display: flex;
             align-items: center;
