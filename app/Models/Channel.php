@@ -33,4 +33,5 @@ class Channel {
         $pdo = Database::get();
         $pdo->prepare("UPDATE channels SET viewer_count = viewer_count + 1 WHERE slug = ?")->execute([$slug]);
     }
+     
 }
