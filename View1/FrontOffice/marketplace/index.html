@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Discord Clone</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <!-- ============================================
+         TOP NAVIGATION TEMPLATE
+         Use the data-page-target attribute to hook your JS
+         ============================================ -->
+    <nav class="top-nav" aria-label="Primary navigation">
+        <div class="nav-container">
+            <a class="nav-item" href="../servers/index.html" data-page-target="servers-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M7 8h10M7 12h6m8-1a9 9 0 10-4.5 7.8l3.6 1.2a1 1 0 001.3-1.1l-.6-3A8.9 8.9 0 0021 11z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Servers</span>
+            </a>
+            <a class="nav-item" href="../stream/index.html" data-page-target="stream-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M4 6a2 2 0 012-2h12a2 2 0 012 2v9a2 2 0 01-2 2h-3l-4.5 3a1 1 0 01-1.5-.86V17H6a2 2 0 01-2-2V6z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Stream</span>
+            </a>
+            <a class="nav-item active" href="../marketplace/index.html" data-page-target="marketplace-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M3 9l1.8-3.6A2 2 0 016.6 4h10.8a2 2 0 011.8 1.4L21 9v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M3 9h18M8 13h1.5a1.5 1.5 0 011.5 1.5V20M14 20v-5.5A1.5 1.5 0 0115.5 13H17"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Marketplace</span>
+            </a>
+            <a class="nav-item" href="../feed/index.html" data-page-target="feed-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M21 5.92a6.55 6.55 0 01-1.89.52 3.3 3.3 0 001.45-1.82 6.59 6.59 0 01-2.07.8 3.28 3.28 0 00-5.6 2.24 3.4 3.4 0 00.08.75A9.31 9.31 0 013 5.16a3.29 3.29 0 001.02 4.38 3.23 3.23 0 01-1.48-.41v.04a3.29 3.29 0 002.63 3.22 3.3 3.3 0 01-1.47.06 3.29 3.29 0 003.07 2.28A6.58 6.58 0 013 17.54 9.29 9.29 0 008.05 19c6.29 0 9.73-5.22 9.73-9.75q0-.23-.01-.45A6.97 6.97 0 0021 5.92z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Feed</span>
+            </a>
+            <a class="nav-item" href="../events/index.html" data-page-target="events-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Events</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============================================
+         MARKETPLACE PAGE - STANDALONE TEMPLATE
+         Work on this page independently
+         ============================================ -->
+    <main class="main-wrapper">
+        <section id="marketplace-page" class="page active" data-template-section="marketplace">
+            <div class="marketplace-page">
+                <div class="marketplace-header">
+                    <div>
+                        <h1 class="marketplace-title">Marketplace</h1>
+                        <p class="marketplace-subtitle">Discover unique listings from the community</p>
+                    </div>
+                    <div class="marketplace-actions">
+                        <label class="marketplace-search">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                      d="M21 21l-4.35-4.35M17 10.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"/>
+                            </svg>
+                            <input 
+                                id="marketplace-search"
+                                type="search" 
+                                placeholder="Search listings, sellers, or categories..."
+                                data-template-field="marketplace-search"
+                                autocomplete="off"
+                            />
+                        </label>
+                        <div class="marketplace-filters">
+                            <button type="button" class="marketplace-filter active" data-category="all">All</button>
+                            <button type="button" class="marketplace-filter" data-category="tech">Tech</button>
+                            <button type="button" class="marketplace-filter" data-category="creative">Creative</button>
+                            <button type="button" class="marketplace-filter" data-category="lifestyle">Lifestyle</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="marketplace-grid" id="marketplace-grid">
+                    <article class="marketplace-card" data-template-item="listing">
+                        <div class="marketplace-card-media" style="background-image: url('https://images.unsplash.com/photo-1523475472560-d2df97ec485c?auto=format&fit=crop&w=800&q=60');">
+                            <span class="marketplace-card-pill">Tech</span>
+                            <button class="marketplace-favorite" type="button" aria-label="Save listing">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A4.5 4.5 0 016.5 4 4.11 4.11 0 0112 6.09 4.11 4.11 0 0117.5 4 4.5 4.5 0 0122 8.5c0 3.78-3.4 6.86-8.55 11.18z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="marketplace-card-body">
+                            <div class="marketplace-card-price">$320</div>
+                            <h3 class="marketplace-card-title">Custom Mechanical Keyboard</h3>
+                            <p class="marketplace-card-description">Gasket mounted, hot-swappable PCB, lubed switches.</p>
+                            <div class="marketplace-card-meta">
+                                <span class="marketplace-card-seller">By PixelSmith</span>
+                                <span class="marketplace-card-location">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 21s-6-5.33-6-10a6 6 0 1112 0c0 4.67-6 10-6 10z"/>
+                                        <circle cx="12" cy="11" r="2"/>
+                                    </svg>
+                                    Remote
+                                </span>
+                            </div>
+                            <div class="marketplace-card-tags">
+                                <span class="marketplace-card-tag">RGB</span>
+                                <span class="marketplace-card-tag">Hot Swap</span>
+                            </div>
+                            <button class="marketplace-card-action" type="button">Contact Seller</button>
+                        </div>
+                    </article>
+                    <article class="marketplace-card" data-template-item="listing">
+                        <div class="marketplace-card-media" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=60');">
+                            <span class="marketplace-card-pill">Creative</span>
+                        </div>
+                        <div class="marketplace-card-body">
+                            <div class="marketplace-card-price">$120</div>
+                            <h3 class="marketplace-card-title">Streaming Overlay Pack</h3>
+                            <p class="marketplace-card-description">14 scenes, alerts, and widgets ready for OBS.</p>
+                            <div class="marketplace-card-meta">
+                                <span class="marketplace-card-seller">By DesignStudio</span>
+                                <span class="marketplace-card-location">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 21s-6-5.33-6-10a6 6 0 1112 0c0 4.67-6 10-6 10z"/>
+                                        <circle cx="12" cy="11" r="2"/>
+                                    </svg>
+                                    Digital
+                                </span>
+                            </div>
+                            <button class="marketplace-card-action" type="button">Preview Pack</button>
+                        </div>
+                    </article>
+                    <article class="marketplace-card" data-template-item="listing">
+                        <div class="marketplace-card-media" style="background-image: url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=60');">
+                            <span class="marketplace-card-pill">Lifestyle</span>
+                            <button class="marketplace-favorite active" type="button" aria-label="Save listing">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A4.5 4.5 0 016.5 4 4.11 4.11 0 0112 6.09 4.11 4.11 0 0117.5 4 4.5 4.5 0 0122 8.5c0 3.78-3.4 6.86-8.55 11.18z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="marketplace-card-body">
+                            <div class="marketplace-card-price">$85</div>
+                            <h3 class="marketplace-card-title">Vintage Headphones</h3>
+                            <p class="marketplace-card-description">Classic design, excellent sound quality, like new condition.</p>
+                            <div class="marketplace-card-meta">
+                                <span class="marketplace-card-seller">By AudioCollector</span>
+                                <span class="marketplace-card-location">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 21s-6-5.33-6-10a6 6 0 1112 0c0 4.67-6 10-6 10z"/>
+                                        <circle cx="12" cy="11" r="2"/>
+                                    </svg>
+                                    Local Pickup
+                                </span>
+                            </div>
+                            <div class="marketplace-card-tags">
+                                <span class="marketplace-card-tag">Vintage</span>
+                                <span class="marketplace-card-tag">Audio</span>
+                            </div>
+                            <button class="marketplace-card-action" type="button">Contact Seller</button>
+                        </div>
+                    </article>
+                    <article class="marketplace-card" data-template-item="listing">
+                        <div class="marketplace-card-media" style="background-image: url('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=60');">
+                            <span class="marketplace-card-pill">Tech</span>
+                        </div>
+                        <div class="marketplace-card-body">
+                            <div class="marketplace-card-price">$450</div>
+                            <h3 class="marketplace-card-title">Gaming Monitor 144Hz</h3>
+                            <p class="marketplace-card-description">27 inch, 1440p, G-Sync compatible, excellent condition.</p>
+                            <div class="marketplace-card-meta">
+                                <span class="marketplace-card-seller">By TechGamer</span>
+                                <span class="marketplace-card-location">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                              d="M12 21s-6-5.33-6-10a6 6 0 1112 0c0 4.67-6 10-6 10z"/>
+                                        <circle cx="12" cy="11" r="2"/>
+                                    </svg>
+                                    Shipping Available
+                                </span>
+                            </div>
+                            <div class="marketplace-card-tags">
+                                <span class="marketplace-card-tag">Gaming</span>
+                                <span class="marketplace-card-tag">144Hz</span>
+                            </div>
+                            <button class="marketplace-card-action" type="button">Contact Seller</button>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="marketplace-wallet" id="marketplace-wallet">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M3 7a2 2 0 012-2h14a2 2 0 012 2v4h-5a3 3 0 000 6h5v0a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <circle cx="16" cy="15" r="1"/>
+                    </svg>
+                    Wallet balance: <strong>$1,280.00</strong>
+                </div>
+
+                <div class="marketplace-empty" id="marketplace-empty" aria-hidden="true">
+                    <div class="marketplace-empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M3 9l1.8-3.6A2 2 0 016.6 4h10.8a2 2 0 011.8 1.4L21 9v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M3 9h18M8 13h1.5a1.5 1.5 0 011.5 1.5V20M14 20v-5.5A1.5 1.5 0 0115.5 13H17"/>
+                        </svg>
+                    </div>
+                    <h2>No listings match your filters</h2>
+                    <p>Try adjusting your search or browse another category to discover more items.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+

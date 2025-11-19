@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Admin Panel</title>
+    <link rel="stylesheet" href="../admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Admin Panel</h2>
+                <div class="admin-avatar">A</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../dashboard/index.html" class="nav-link" data-section-target="dashboard-section">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="../users/index.html" class="nav-link" data-section-target="users-section">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </a>
+                <a href="../servers/index.html" class="nav-link" data-section-target="servers-section">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">Servers</span>
+                </a>
+                <a href="../messages/index.html" class="nav-link" data-section-target="messages-section">
+                    <span class="nav-icon">💌</span>
+                    <span class="nav-text">Messages</span>
+                </a>
+                <a href="../streams/index.html" class="nav-link" data-section-target="streams-section">
+                    <span class="nav-icon">📺</span>
+                    <span class="nav-text">Streams</span>
+                </a>
+                <a href="../posts/index.html" class="nav-link" data-section-target="posts-section">
+                    <span class="nav-icon">🐦</span>
+                    <span class="nav-text">Posts</span>
+                </a>
+                <a href="../events/index.html" class="nav-link active" data-section-target="events-section">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Events</span>
+                </a>
+                <a href="../settings/index.html" class="nav-link" data-section-target="settings-section">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" type="button" data-template-action="admin-logout">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 class="page-title" id="page-title">Events</h1>
+                    <p class="page-subtitle" id="page-subtitle">Manage community events</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search..." id="admin-search" class="search-input" />
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <button class="refresh-btn" type="button" title="Refresh Data" data-template-action="refresh">
+                        🔄
+                    </button>
+                </div>
+            </header>
+
+            <section id="events-section" class="content-section active">
+                <div class="section-header">
+                    <h2 class="section-title">Event Management</h2>
+                    <button class="add-btn" type="button" data-template-action="open-add-event">+ Add Event</button>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Event Name</th>
+                                    <th>Organizer</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Attendees</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="events-table">
+                                <tr data-template-row="event">
+                                    <td>#EV001</td>
+                                    <td>Community Game Night</td>
+                                    <td>NovaXR</td>
+                                    <td>Nov 15, 2025</td>
+                                    <td>7:00 PM - 10:00 PM</td>
+                                    <td>24</td>
+                                    <td><span class="status-badge status-active">Upcoming</span></td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Edit</button>
+                                        <button class="action-btn btn-delete" type="button">Cancel</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="event">
+                                    <td>#EV002</td>
+                                    <td>Design Workshop: UI/UX Basics</td>
+                                    <td>PixelSmith</td>
+                                    <td>Nov 22, 2025</td>
+                                    <td>2:00 PM - 5:00 PM</td>
+                                    <td>18</td>
+                                    <td><span class="status-badge status-active">Upcoming</span></td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Edit</button>
+                                        <button class="action-btn btn-delete" type="button">Cancel</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="event">
+                                    <td>#EV003</td>
+                                    <td>Coding Challenge: Build a Discord Clone</td>
+                                    <td>CodeMaster</td>
+                                    <td>Nov 28, 2025</td>
+                                    <td>Ongoing</td>
+                                    <td>42</td>
+                                    <td><span class="status-badge status-active">Live Now</span></td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">View</button>
+                                        <button class="action-btn btn-delete" type="button">End</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="event">
+                                    <td>#EV004</td>
+                                    <td>Music Production Masterclass</td>
+                                    <td>SynthWave</td>
+                                    <td>Dec 05, 2025</td>
+                                    <td>6:00 PM - 9:00 PM</td>
+                                    <td>12</td>
+                                    <td><span class="status-badge status-active">Upcoming</span></td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Edit</button>
+                                        <button class="action-btn btn-delete" type="button">Cancel</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
+
+

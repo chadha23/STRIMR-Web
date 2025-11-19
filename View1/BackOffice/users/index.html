@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Admin Panel</title>
+    <link rel="stylesheet" href="../admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Admin Panel</h2>
+                <div class="admin-avatar">A</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../dashboard/index.html" class="nav-link" data-section-target="dashboard-section">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="../users/index.html" class="nav-link active" data-section-target="users-section">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </a>
+                <a href="../servers/index.html" class="nav-link" data-section-target="servers-section">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">Servers</span>
+                </a>
+                <a href="../messages/index.html" class="nav-link" data-section-target="messages-section">
+                    <span class="nav-icon">💌</span>
+                    <span class="nav-text">Messages</span>
+                </a>
+                <a href="../streams/index.html" class="nav-link" data-section-target="streams-section">
+                    <span class="nav-icon">📺</span>
+                    <span class="nav-text">Streams</span>
+                </a>
+                <a href="../posts/index.html" class="nav-link" data-section-target="posts-section">
+                    <span class="nav-icon">🐦</span>
+                    <span class="nav-text">Posts</span>
+                </a>
+                <a href="../events/index.html" class="nav-link" data-section-target="events-section">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Events</span>
+                </a>
+                <a href="../settings/index.html" class="nav-link" data-section-target="settings-section">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" type="button" data-template-action="admin-logout">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 class="page-title" id="page-title">Users</h1>
+                    <p class="page-subtitle" id="page-subtitle">Manage platform users</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search..." id="admin-search" class="search-input" />
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <button class="refresh-btn" type="button" title="Refresh Data" data-template-action="refresh">
+                        🔄
+                    </button>
+                </div>
+            </header>
+
+            <section id="users-section" class="content-section active">
+                <div class="section-header">
+                    <h2 class="section-title">User Management</h2>
+                    <button class="add-btn" type="button" data-template-action="open-add-user">+ Add User</button>
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Filter:</label>
+                        <select id="user-filter" class="filter-select" data-template-field="user-filter">
+                            <option value="all">All Users</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="new">New (Last 7 days)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Sort:</label>
+                        <select id="user-sort" class="filter-select" data-template-field="user-sort">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="name">By Name</option>
+                            <option value="activity">Most Active</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Joined</th>
+                                    <th>Status</th>
+                                    <th>Messages</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table">
+                                <tr data-template-row="user">
+                                    <td>#4821</td>
+                                    <td>
+                                        <strong>NovaXR</strong><br>
+                                        <small>@nova</small>
+                                    </td>
+                                    <td>nova@example.com</td>
+                                    <td>Nov 12, 2025</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>1,248</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Edit</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="user">
+                                    <td>#3905</td>
+                                    <td>
+                                        <strong>Mila Rivers</strong><br>
+                                        <small>@mila</small>
+                                    </td>
+                                    <td>mila@example.com</td>
+                                    <td>Oct 28, 2025</td>
+                                    <td><span class="status-badge status-inactive">Pending Review</span></td>
+                                    <td>312</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Edit</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button class="page-btn" type="button" data-template-action="page-prev">← Previous</button>
+                    <span class="page-info">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                    <button class="page-btn" type="button" data-template-action="page-next">Next →</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="add-user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New User</h3>
+                <button class="modal-close" type="button" data-template-action="close-modal" data-modal="add-user-modal">×</button>
+            </div>
+            <form class="modal-form" action="#" method="post" data-template-form="add-user">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-input" required />
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" data-template-action="close-modal" data-modal="add-user-modal">Cancel</button>
+                    <button type="submit" class="btn-submit">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+

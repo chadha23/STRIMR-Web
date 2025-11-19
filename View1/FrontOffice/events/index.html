@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Discord Clone</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <!-- ============================================
+         TOP NAVIGATION TEMPLATE
+         Use the data-page-target attribute to hook your JS
+         ============================================ -->
+    <nav class="top-nav" aria-label="Primary navigation">
+        <div class="nav-container">
+            <a class="nav-item" href="../servers/index.html" data-page-target="servers-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M7 8h10M7 12h6m8-1a9 9 0 10-4.5 7.8l3.6 1.2a1 1 0 001.3-1.1l-.6-3A8.9 8.9 0 0021 11z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Servers</span>
+            </a>
+            <a class="nav-item" href="../stream/index.html" data-page-target="stream-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M4 6a2 2 0 012-2h12a2 2 0 012 2v9a2 2 0 01-2 2h-3l-4.5 3a1 1 0 01-1.5-.86V17H6a2 2 0 01-2-2V6z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Stream</span>
+            </a>
+            <a class="nav-item" href="../marketplace/index.html" data-page-target="marketplace-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M3 9l1.8-3.6A2 2 0 016.6 4h10.8a2 2 0 011.8 1.4L21 9v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M3 9h18M8 13h1.5a1.5 1.5 0 011.5 1.5V20M14 20v-5.5A1.5 1.5 0 0115.5 13H17"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Marketplace</span>
+            </a>
+            <a class="nav-item" href="../feed/index.html" data-page-target="feed-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M21 5.92a6.55 6.55 0 01-1.89.52 3.3 3.3 0 001.45-1.82 6.59 6.59 0 01-2.07.8 3.28 3.28 0 00-5.6 2.24 3.4 3.4 0 00.08.75A9.31 9.31 0 013 5.16a3.29 3.29 0 001.02 4.38 3.23 3.23 0 01-1.48-.41v.04a3.29 3.29 0 002.63 3.22 3.3 3.3 0 01-1.47.06 3.29 3.29 0 003.07 2.28A6.58 6.58 0 013 17.54 9.29 9.29 0 008.05 19c6.29 0 9.73-5.22 9.73-9.75q0-.23-.01-.45A6.97 6.97 0 0021 5.92z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Feed</span>
+            </a>
+            <a class="nav-item active" href="../events/index.html" data-page-target="events-page">
+                <div class="nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <span class="nav-label">Events</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============================================
+         EVENTS PAGE - STANDALONE TEMPLATE
+         Work on this page independently
+         ============================================ -->
+    <main class="main-wrapper">
+        <section id="events-page" class="page active" data-template-section="events">
+            <div class="events-page">
+                <!-- Events Header with Add Event Button -->
+                <div class="events-header">
+                    <div>
+                        <h1 class="events-title">Events</h1>
+                        <p class="events-subtitle">Discover and join community events</p>
+                    </div>
+                    <button class="add-event-btn" type="button" data-template-action="add-event">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5"/>
+                        </svg>
+                        <span>Add Event</span>
+                    </button>
+                </div>
+
+                <!-- Events Grid -->
+                <div class="events-grid" id="events-grid">
+                    <article class="event-card" data-template-item="event">
+                        <div class="event-card-header">
+                            <div class="event-date">
+                                <div class="event-day">15</div>
+                                <div class="event-month">NOV</div>
+                            </div>
+                            <div class="event-status-badge upcoming">Upcoming</div>
+                        </div>
+                        <div class="event-card-body">
+                            <h3 class="event-title">Community Game Night</h3>
+                            <p class="event-description">Join us for an evening of fun games and friendly competition. All skill levels welcome!</p>
+                            <div class="event-details">
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>7:00 PM - 10:00 PM</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span>Virtual / Online</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                    <span>24 attending</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-card-footer">
+                            <button class="event-join-btn" type="button" data-template-action="join-event">Join Event</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card" data-template-item="event">
+                        <div class="event-card-header">
+                            <div class="event-date">
+                                <div class="event-day">22</div>
+                                <div class="event-month">NOV</div>
+                            </div>
+                            <div class="event-status-badge upcoming">Upcoming</div>
+                        </div>
+                        <div class="event-card-body">
+                            <h3 class="event-title">Design Workshop: UI/UX Basics</h3>
+                            <p class="event-description">Learn the fundamentals of user interface and user experience design in this hands-on workshop.</p>
+                            <div class="event-details">
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>2:00 PM - 5:00 PM</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span>Creative Hub</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                    <span>18 attending</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-card-footer">
+                            <button class="event-join-btn" type="button" data-template-action="join-event">Join Event</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card" data-template-item="event">
+                        <div class="event-card-header">
+                            <div class="event-date">
+                                <div class="event-day">28</div>
+                                <div class="event-month">NOV</div>
+                            </div>
+                            <div class="event-status-badge live">Live Now</div>
+                        </div>
+                        <div class="event-card-body">
+                            <h3 class="event-title">Coding Challenge: Build a Discord Clone</h3>
+                            <p class="event-description">Real-time coding session where we build features together. Bring your questions and ideas!</p>
+                            <div class="event-details">
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Ongoing</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span>Virtual / Online</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                    <span>42 attending</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-card-footer">
+                            <button class="event-join-btn" type="button" data-template-action="join-event">Join Event</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card" data-template-item="event">
+                        <div class="event-card-header">
+                            <div class="event-date">
+                                <div class="event-day">05</div>
+                                <div class="event-month">DEC</div>
+                            </div>
+                            <div class="event-status-badge upcoming">Upcoming</div>
+                        </div>
+                        <div class="event-card-body">
+                            <h3 class="event-title">Music Production Masterclass</h3>
+                            <p class="event-description">Learn advanced production techniques from industry professionals. Bring your DAW and questions!</p>
+                            <div class="event-details">
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>6:00 PM - 9:00 PM</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span>Studio A</span>
+                                </div>
+                                <div class="event-detail-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                    <span>12 attending</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-card-footer">
+                            <button class="event-join-btn" type="button" data-template-action="join-event">Join Event</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+

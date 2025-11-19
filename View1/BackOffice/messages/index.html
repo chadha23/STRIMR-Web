@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Admin Panel</title>
+    <link rel="stylesheet" href="../admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Admin Panel</h2>
+                <div class="admin-avatar">A</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../dashboard/index.html" class="nav-link" data-section-target="dashboard-section">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="../users/index.html" class="nav-link" data-section-target="users-section">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </a>
+                <a href="../servers/index.html" class="nav-link" data-section-target="servers-section">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">Servers</span>
+                </a>
+                <a href="../messages/index.html" class="nav-link active" data-section-target="messages-section">
+                    <span class="nav-icon">💌</span>
+                    <span class="nav-text">Messages</span>
+                </a>
+                <a href="../streams/index.html" class="nav-link" data-section-target="streams-section">
+                    <span class="nav-icon">📺</span>
+                    <span class="nav-text">Streams</span>
+                </a>
+                <a href="../posts/index.html" class="nav-link" data-section-target="posts-section">
+                    <span class="nav-icon">🐦</span>
+                    <span class="nav-text">Posts</span>
+                </a>
+                <a href="../events/index.html" class="nav-link" data-section-target="events-section">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Events</span>
+                </a>
+                <a href="../settings/index.html" class="nav-link" data-section-target="settings-section">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" type="button" data-template-action="admin-logout">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 class="page-title" id="page-title">Messages</h1>
+                    <p class="page-subtitle" id="page-subtitle">Manage platform messages</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search..." id="admin-search" class="search-input" />
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <button class="refresh-btn" type="button" title="Refresh Data" data-template-action="refresh">
+                        🔄
+                    </button>
+                </div>
+            </header>
+
+            <section id="messages-section" class="content-section active">
+                <div class="section-header">
+                    <h2 class="section-title">Message Management</h2>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Content</th>
+                                    <th>Server</th>
+                                    <th>Channel</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messages-table">
+                                <tr data-template-row="message">
+                                    <td>#9824</td>
+                                    <td>NovaXR</td>
+                                    <td>"Launching a new build tonight, feedback welcome!"</td>
+                                    <td>Gaming Hub</td>
+                                    <td>#general</td>
+                                    <td>09:12</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Review</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr data-template-row="message">
+                                    <td>#9825</td>
+                                    <td>PixelSmith</td>
+                                    <td>Uploaded 4 new reference shots.</td>
+                                    <td>Creative Collective</td>
+                                    <td>#showcase</td>
+                                    <td>08:48</td>
+                                    <td>
+                                        <button class="action-btn btn-edit" type="button">Review</button>
+                                        <button class="action-btn btn-delete" type="button">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
+

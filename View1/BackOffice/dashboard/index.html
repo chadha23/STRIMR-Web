@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin Panel</title>
+    <link rel="stylesheet" href="../admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Admin Panel</h2>
+                <div class="admin-avatar">A</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../dashboard/index.html" class="nav-link active" data-section-target="dashboard-section">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="../users/index.html" class="nav-link" data-section-target="users-section">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </a>
+                <a href="../servers/index.html" class="nav-link" data-section-target="servers-section">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">Servers</span>
+                </a>
+                <a href="../messages/index.html" class="nav-link" data-section-target="messages-section">
+                    <span class="nav-icon">💌</span>
+                    <span class="nav-text">Messages</span>
+                </a>
+                <a href="../streams/index.html" class="nav-link" data-section-target="streams-section">
+                    <span class="nav-icon">📺</span>
+                    <span class="nav-text">Streams</span>
+                </a>
+                <a href="../posts/index.html" class="nav-link" data-section-target="posts-section">
+                    <span class="nav-icon">🐦</span>
+                    <span class="nav-text">Posts</span>
+                </a>
+                <a href="../events/index.html" class="nav-link" data-section-target="events-section">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Events</span>
+                </a>
+                <a href="../settings/index.html" class="nav-link" data-section-target="settings-section">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" type="button" data-template-action="admin-logout">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 class="page-title" id="page-title">Dashboard</h1>
+                    <p class="page-subtitle" id="page-subtitle">Overview of your platform</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search..." id="admin-search" class="search-input" />
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <button class="refresh-btn" type="button" title="Refresh Data" data-template-action="refresh">
+                        🔄
+                    </button>
+                </div>
+            </header>
+
+            <section id="dashboard-section" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon users-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Users</div>
+                            <div class="stat-value" id="stat-total-users">0</div>
+                            <div class="stat-change positive">+12% from last month</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon active-icon">🟢</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Active Users</div>
+                            <div class="stat-value" id="stat-active-users">0</div>
+                            <div class="stat-change positive">Online now</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon messages-icon">💌</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Messages</div>
+                            <div class="stat-value" id="stat-total-messages">0</div>
+                            <div class="stat-change positive">+5.2% from last week</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon servers-icon">💬</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Servers</div>
+                            <div class="stat-value" id="stat-total-servers">0</div>
+                            <div class="stat-change">Active servers</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon streams-icon">📺</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Live Streams</div>
+                            <div class="stat-value" id="stat-live-streams">0</div>
+                            <div class="stat-change positive">Currently streaming</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon posts-icon">🐦</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Posts</div>
+                            <div class="stat-value" id="stat-total-posts">0</div>
+                            <div class="stat-change positive">+8.1% from last week</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon events-icon">📅</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Events</div>
+                            <div class="stat-value" id="stat-total-events">0</div>
+                            <div class="stat-change positive">+3.5% from last month</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">User Growth</h3>
+                        <div class="chart-placeholder" id="user-growth-chart">
+                            <div class="chart-bars">
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 75%;"></div>
+                                <div class="chart-bar" style="height: 85%;"></div>
+                                <div class="chart-bar" style="height: 70%;"></div>
+                                <div class="chart-bar" style="height: 90%;"></div>
+                                <div class="chart-bar" style="height: 100%;"></div>
+                                <div class="chart-bar" style="height: 95%;"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Activity Overview</h3>
+                        <div class="activity-list" id="activity-list">
+                            <div class="activity-item" data-template-item="activity">
+                                <div class="activity-icon">👤</div>
+                                <div class="activity-content">
+                                    <p class="activity-text"><strong>NovaXR</strong> joined the server <strong>#Gaming Hub</strong>.</p>
+                                    <p class="activity-time">2 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item" data-template-item="activity">
+                                <div class="activity-icon">💬</div>
+                                <div class="activity-content">
+                                    <p class="activity-text"><strong>Skyler</strong> posted 14 new messages in <strong>#general</strong>.</p>
+                                    <p class="activity-time">12 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="activity-item" data-template-item="activity">
+                                <div class="activity-icon">📺</div>
+                                <div class="activity-content">
+                                    <p class="activity-text"><strong>AveryLive</strong> started streaming "Nightly Q&amp;A".</p>
+                                    <p class="activity-time">25 minutes ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Activity</h3>
+                        <button class="view-all-btn" type="button" data-section-target="messages-section">View All</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-activity-table">
+                                <tr data-template-row="recent-activity">
+                                    <td>Kai Parker</td>
+                                    <td>Created server</td>
+                                    <td>"Design Squad" • 4 channels</td>
+                                    <td>09:24</td>
+                                </tr>
+                                <tr data-template-row="recent-activity">
+                                    <td>Mila Rivers</td>
+                                    <td>Reported message</td>
+                                    <td>#announcements • reason: spam</td>
+                                    <td>08:57</td>
+                                </tr>
+                                <tr data-template-row="recent-activity">
+                                    <td>Ethan Lee</td>
+                                    <td>Started stream</td>
+                                    <td>"Speedrunning Retro Classics"</td>
+                                    <td>08:41</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Posts</h3>
+                        <button class="view-all-btn" type="button" data-section-target="posts-section">View All</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Author</th>
+                                    <th>Content</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-posts-table">
+                                <!-- Posts will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="../../Model/delete_post.js"></script>
+    <script>
+        function loadPosts() {
+            fetch('../../Model/get_posts.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const tbody = document.getElementById('recent-posts-table');
+                        tbody.innerHTML = '';
+                        data.posts.slice(0, 5).forEach(post => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${post.author_id}</td>
+                                <td>${post.content}</td>
+                                <td>${new Date(post.created_at).toLocaleString()}</td>
+                                <td><button class="action-btn btn-delete" type="button" data-id="${post.id}">Delete</button></td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading posts:', error));
+        }
+
+        window.onload = loadPosts;
+    </script>
+</body>
+</html>
+
+

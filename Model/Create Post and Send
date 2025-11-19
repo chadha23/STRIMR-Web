@@ -1,0 +1,25 @@
+var postButton = document.getElementById('post-button');
+var postText = document.getElementById('post-textarea');
+
+postButton.onclick = function(){
+    var Contenu = postText.value;
+    if(Contenu.trim() == ""){
+        alert("Empty Post huh ?");
+        return;
+    }
+
+    fetch('create_post.php', {
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({Content:Contenu})
+    })
+    .then(response => response.json())
+    .then(data => {if (data.success){
+            alert("The Magic Worked");
+            location.reload();
+    }else{
+        alert("Your sound didn't reach nobody " + data.message);
+    }})
+    .catch(error => {
+        console.error('Error:',error);
+        alert("Check Your Connection");
+    });
+}
