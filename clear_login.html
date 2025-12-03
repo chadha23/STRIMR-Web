@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Login Data</title>
+</head>
+<body>
+    <h1>Clear Login Data</h1>
+    <button onclick="clearData()">Clear All Login Data</button>
+    <div id="status"></div>
+    
+    <script>
+        function clearData() {
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userName');
+            
+            document.getElementById('status').innerHTML = 
+                '<p style="color: green;">All login data cleared!</p>' +
+                '<p>You can now go back to <a href="login.html">login.html</a></p>';
+        }
+        
+        // Show current data
+        window.onload = function() {
+            const token = localStorage.getItem('userToken');
+            const userId = localStorage.getItem('userId');
+            const username = localStorage.getItem('username');
+            
+            document.getElementById('status').innerHTML = 
+                '<h3>Current Data:</h3>' +
+                '<p>Token: ' + (token || 'none') + '</p>' +
+                '<p>User ID: ' + (userId || 'none') + '</p>' +
+                '<p>Username: ' + (username || 'none') + '</p>';
+        };
+    </script>
+</body>
+</html>
+

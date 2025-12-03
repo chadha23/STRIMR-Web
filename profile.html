@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Simple centered card */
+        .profile-page {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #202225;
+            color: #fff;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .profile-card {
+            background-color: #2f3136;
+            padding: 24px 32px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .profile-card h1 {
+            margin: 0 0 4px;
+            font-size: 20px;
+        }
+        .profile-subtitle {
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #b9bbbe;
+        }
+        .profile-form-group {
+            margin-bottom: 14px;
+        }
+        .profile-label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: #b9bbbe;
+            margin-bottom: 4px;
+        }
+        .profile-input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 4px;
+            border: none;
+            background-color: #202225;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+        .profile-input[readonly] {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .profile-actions {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .btn {
+            padding: 8px 14px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-save {
+            background-color: #5865f2;
+            color: #fff;
+        }
+        .btn-back {
+            background-color: #4f545c;
+            color: #fff;
+        }
+        .profile-message {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .profile-message.error {
+            color: #f04747;
+        }
+        .profile-message.success {
+            color: #43b581;
+        }
+    </style>
+</head>
+<body>
+<div class="profile-page">
+    <div class="profile-card">
+        <h1>User Profile</h1>
+        <div class="profile-subtitle">View and update your account information.</div>
+
+        <form id="profile-form">
+            <div class="profile-form-group">
+                <label class="profile-label" for="profile-id">User ID</label>
+                <input type="text" id="profile-id" class="profile-input" readonly>
+            </div>
+
+            <div class="profile-form-group">
+                <label class="profile-label" for="profile-username">Username</label>
+                <input type="text" id="profile-username" class="profile-input">
+            </div>
+
+            <div class="profile-form-group">
+                <label class="profile-label" for="profile-fullname">Full Name</label>
+                <input type="text" id="profile-fullname" class="profile-input">
+            </div>
+
+            <div class="profile-form-group">
+                <label class="profile-label" for="profile-email">Email</label>
+                <input type="email" id="profile-email" class="profile-input">
+            </div>
+
+            <div class="profile-actions">
+                <button type="button" class="btn btn-back" id="btn-back">Back</button>
+                <button type="submit" class="btn btn-save">Save Changes</button>
+            </div>
+
+            <div id="profile-message" class="profile-message"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Small helper to show messages
+    function showProfileMessage(text, type = 'error') {
+        const el = document.getElementById('profile-message');
+        el.textContent = text;
+        el.className = 'profile-message ' + type;
+    }
+
+    // Load profile on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const token   = localStorage.getItem('userToken');
+        const userId  = localStorage.getItem('userId');
+
+        // If not logged in, go back to login
+        if (!token || !userId) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Back button
+        document.getElementById('btn-back').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        // Fetch profile data
+        fetch('get_profile.php?id=' + encodeURIComponent(userId))
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    showProfileMessage(data.error || 'Failed to load profile', 'error');
+                    return;
+                }
+
+                const user = data.user;
+                document.getElementById('profile-id').value       = user.id;
+                document.getElementById('profile-username').value = user.username || '';
+                document.getElementById('profile-fullname').value = user.full_name || '';
+                document.getElementById('profile-email').value    = user.email || '';
+            })
+            .catch(err => {
+                console.error('Profile load error:', err);
+                showProfileMessage('Server error while loading profile', 'error');
+            });
+
+        // Handle Save
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const id       = document.getElementById('profile-id').value;
+            const username = document.getElementById('profile-username').value.trim();
+            const fullName = document.getElementById('profile-fullname').value.trim();
+            const email    = document.getElementById('profile-email').value.trim();
+
+            if (!username || !fullName || !email) {
+                showProfileMessage('All fields except ID are required', 'error');
+                return;
+            }
+
+            fetch('update_profile.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, username, full_name: fullName, email })
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (!result.success) {
+                    showProfileMessage(result.error || 'Failed to update profile', 'error');
+                    return;
+                }
+
+                // Update localStorage username if changed
+                localStorage.setItem('username', username);
+                showProfileMessage('Profile updated successfully', 'success');
+            })
+            .catch(err => {
+                console.error('Profile save error:', err);
+                showProfileMessage('Server error while saving profile', 'error');
+            });
+        });
+    });
+</script>
+</body>
+</html>

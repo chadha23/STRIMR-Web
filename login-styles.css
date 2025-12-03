@@ -1,0 +1,486 @@
+/* ============================================
+   LOGIN PAGE STYLES
+   ============================================
+   Beautiful login/signup page styling
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    background: linear-gradient(135deg, #0d0e10 0%, #1a1b1e 50%, #0d0e10 100%);
+    color: #dcddde;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   BACKGROUND DECORATION
+   ============================================ */
+.bg-decoration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(88, 101, 242, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(156, 39, 176, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(67, 181, 129, 0.05) 0%, transparent 50%);
+    z-index: 0;
+    animation: bgPulse 10s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* ============================================
+   AUTH CONTAINER
+   ============================================ */
+.auth-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1;
+}
+
+/* ============================================
+   AUTH CARD
+   ============================================ */
+.auth-card {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(32, 34, 37, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(54, 57, 63, 0.5);
+    animation: cardSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(88, 101, 242, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.auth-card:hover::before {
+    left: 100%;
+}
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #5865f2 0%, #9c27b0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-subtitle {
+    font-size: 16px;
+    color: #8e9297;
+    font-weight: 400;
+}
+
+/* ============================================
+   FORM CONTAINER
+   ============================================ */
+.auth-form {
+    display: none;
+    animation: formFadeIn 0.4s ease-out;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+@keyframes formFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ============================================
+   FORM GROUPS
+   ============================================ */
+.form-group {
+    margin-bottom: 20px;
+    animation: fieldSlideIn 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+.form-group:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fieldSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8e9297;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+.form-group:focus-within .form-label {
+    color: #5865f2;
+}
+
+.required {
+    color: #e01e5a;
+}
+
+/* ============================================
+   INPUT FIELDS
+   ============================================ */
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #1e1f22;
+    border: 1px solid #36393f;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    font-family: inherit;
+}
+
+.form-input::placeholder {
+    color: #72767d;
+    transition: color 0.2s;
+}
+
+.form-input:focus {
+    border-color: #5865f2;
+    background-color: #25262a;
+    box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-input:focus::placeholder {
+    color: #4a4d52;
+}
+
+.form-input:invalid:not(:placeholder-shown) {
+    border-color: #e01e5a;
+}
+
+.form-input:valid:not(:placeholder-shown) {
+    border-color: #43b581;
+}
+
+/* ============================================
+   FORGOT PASSWORD LINK
+   ============================================ */
+.forgot-password {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #5865f2;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.forgot-password:hover {
+    color: #4752c4;
+    text-decoration: underline;
+}
+
+/* ============================================
+   PASSWORD MATCH INDICATOR
+   ============================================ */
+.password-match {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.password-match.match {
+    color: #43b581;
+}
+
+.password-match.no-match {
+    color: #e01e5a;
+}
+
+/* ============================================
+   SUBMIT BUTTON
+   ============================================ */
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #5865f2 0%, #4752c4 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 8px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
+}
+
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.submit-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #4752c4 0%, #5865f2 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(88, 101, 242, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+.submit-btn.loading .btn-text {
+    display: none;
+}
+
+.submit-btn.loading .btn-loader {
+    display: block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   AUTH SWITCH (Login/Signup Toggle)
+   ============================================ */
+.auth-switch {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(54, 57, 63, 0.5);
+}
+
+.switch-text {
+    font-size: 14px;
+    color: #8e9297;
+    margin-right: 4px;
+}
+
+.switch-link {
+    background: none;
+    border: none;
+    color: #5865f2;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.switch-link:hover {
+    color: #4752c4;
+    background-color: rgba(88, 101, 242, 0.1);
+    text-decoration: underline;
+}
+
+/* ============================================
+   MESSAGE (Error/Success)
+   ============================================ */
+.auth-message {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    display: none;
+    animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-message.show {
+    display: block;
+}
+
+.auth-message.error {
+    background-color: rgba(224, 30, 90, 0.1);
+    border: 1px solid rgba(224, 30, 90, 0.3);
+    color: #e01e5a;
+}
+
+.auth-message.success {
+    background-color: rgba(67, 181, 129, 0.1);
+    border: 1px solid rgba(67, 181, 129, 0.3);
+    color: #43b581;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 600px) {
+    .auth-card {
+        padding: 24px;
+        margin: 20px;
+    }
+
+    .auth-title {
+        font-size: 24px;
+    }
+
+    .auth-subtitle {
+        font-size: 14px;
+    }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1f22;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #5865f2 0%, #4752c4 100%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #4752c4 0%, #5865f2 100%);
+}
+
+
+

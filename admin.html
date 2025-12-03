@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Discord Clone</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <!-- ============================================
+         ADMIN DASHBOARD PAGE
+         ============================================ -->
+    <div class="admin-container">
+        <!-- ============================================
+             SIDEBAR NAVIGATION
+             ============================================ -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Admin Panel</h2>
+                <div class="admin-avatar">A</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-link active" onclick="switchSection('dashboard')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#users" class="nav-link" onclick="switchSection('users')">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Users</span>
+                </a>
+                <a href="#servers" class="nav-link" onclick="switchSection('servers')">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">Servers</span>
+                </a>
+                <a href="#messages" class="nav-link" onclick="switchSection('messages')">
+                    <span class="nav-icon">💌</span>
+                    <span class="nav-text">Messages</span>
+                </a>
+                <a href="#streams" class="nav-link" onclick="switchSection('streams')">
+                    <span class="nav-icon">📺</span>
+                    <span class="nav-text">Streams</span>
+                </a>
+                <a href="#posts" class="nav-link" onclick="switchSection('posts')">
+                    <span class="nav-icon">🐦</span>
+                    <span class="nav-text">Posts</span>
+                </a>
+                <a href="#settings" class="nav-link" onclick="switchSection('settings')">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="handleAdminLogout()">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ============================================
+             MAIN CONTENT AREA
+             ============================================ -->
+        <main class="admin-main">
+            <!-- Top Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 class="page-title" id="page-title">Dashboard</h1>
+                    <p class="page-subtitle" id="page-subtitle">Overview of your platform</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search..." id="admin-search" class="search-input" />
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <button class="refresh-btn" onclick="refreshData()" title="Refresh Data">
+                        🔄
+                    </button>
+                </div>
+            </header>
+
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard-section" class="content-section active">
+                <!-- Statistics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon users-icon">👥</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Users</div>
+                            <div class="stat-value" id="stat-total-users">0</div>
+                            <div class="stat-change positive">+12% from last month</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon active-icon">🟢</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Active Users</div>
+                            <div class="stat-value" id="stat-active-users">0</div>
+                            <div class="stat-change positive">Online now</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon messages-icon">💌</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Messages</div>
+                            <div class="stat-value" id="stat-total-messages">0</div>
+                            <div class="stat-change positive">+5.2% from last week</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon servers-icon">💬</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Servers</div>
+                            <div class="stat-value" id="stat-total-servers">0</div>
+                            <div class="stat-change">Active servers</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon streams-icon">📺</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Live Streams</div>
+                            <div class="stat-value" id="stat-live-streams">0</div>
+                            <div class="stat-change positive">Currently streaming</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon posts-icon">🐦</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Posts</div>
+                            <div class="stat-value" id="stat-total-posts">0</div>
+                            <div class="stat-change positive">+8.1% from last week</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts/Graphs Area -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">User Growth</h3>
+                        <div class="chart-placeholder" id="user-growth-chart">
+                            <div class="chart-bars">
+                                <div class="chart-bar" style="height: 60%;"></div>
+                                <div class="chart-bar" style="height: 75%;"></div>
+                                <div class="chart-bar" style="height: 85%;"></div>
+                                <div class="chart-bar" style="height: 70%;"></div>
+                                <div class="chart-bar" style="height: 90%;"></div>
+                                <div class="chart-bar" style="height: 100%;"></div>
+                                <div class="chart-bar" style="height: 95%;"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Activity Overview</h3>
+                        <div class="activity-list" id="activity-list">
+                            <!-- Activity items will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Table -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Activity</h3>
+                        <button class="view-all-btn" onclick="switchSection('messages')">View All</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-activity-table">
+                                <!-- Table rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- USERS SECTION -->
+            <section id="users-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">User Management</h2>
+                    <button class="add-btn" onclick="showAddUserModal()">+ Add User</button>
+                </div>
+
+                <!-- Users Filter/Search -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Filter:</label>
+                        <select id="user-filter" class="filter-select" onchange="filterUsers()">
+                            <option value="all">All Users</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="new">New (Last 7 days)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Sort:</label>
+                        <select id="user-sort" class="filter-select" onchange="sortUsers()">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="name">By Name</option>
+                            <option value="activity">Most Active</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Joined</th>
+                                    <th>Status</th>
+                                    <th>Messages</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table">
+                                <!-- User rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="page-btn" onclick="changePage(-1)">← Previous</button>
+                    <span class="page-info">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                    <button class="page-btn" onclick="changePage(1)">Next →</button>
+                </div>
+            </section>
+
+            <!-- SERVERS SECTION -->
+            <section id="servers-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Server Management</h2>
+                    <button class="add-btn" onclick="showAddServerModal()">+ Add Server</button>
+                </div>
+
+                <div class="cards-grid" id="servers-grid">
+                    <!-- Server cards will be inserted here -->
+                </div>
+            </section>
+
+            <!-- MESSAGES SECTION -->
+            <section id="messages-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Message Management</h2>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Content</th>
+                                    <th>Server</th>
+                                    <th>Channel</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messages-table">
+                                <!-- Message rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STREAMS SECTION -->
+            <section id="streams-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Stream Management</h2>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Streamer</th>
+                                    <th>Title</th>
+                                    <th>Viewers</th>
+                                    <th>Status</th>
+                                    <th>Started</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="streams-table">
+                                <!-- Stream rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- POSTS SECTION -->
+            <section id="posts-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Post Management</h2>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Content</th>
+                                    <th>Likes</th>
+                                    <th>Retweets</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="posts-table">
+                                <!-- Post rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SETTINGS SECTION -->
+            <section id="settings-section" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Settings</h2>
+                </div>
+
+                <div class="settings-card">
+                    <h3 class="settings-group-title">General Settings</h3>
+                    <div class="settings-item">
+                        <label class="settings-label">Site Name</label>
+                        <input type="text" class="settings-input" value="STRIMR-Web" />
+                    </div>
+                    <div class="settings-item">
+                        <label class="settings-label">Maintenance Mode</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" />
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-item">
+                        <label class="settings-label">Max Users</label>
+                        <input type="number" class="settings-input" value="10000" />
+                    </div>
+                    <button class="save-btn">Save Settings</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ============================================
+         MODALS
+         ============================================ -->
+    <!-- Add User Modal -->
+    <div id="add-user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New User</h3>
+                <button class="modal-close" onclick="closeModal('add-user-modal')">×</button>
+            </div>
+            <form class="modal-form" onsubmit="handleAddUser(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-input" required />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-input" required />
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal('add-user-modal')">Cancel</button>
+                    <button type="submit" class="btn-submit">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<script>
+// Add this at the top of your admin.html, before other scripts
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== ADMIN PAGE LOADED ===');
+
+    // Read the same data that login-script.js stores
+    const token    = localStorage.getItem('userToken');
+    const userId   = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+    const isAdmin  = localStorage.getItem('isAdmin') === 'true';
+
+    // If something is missing OR not admin → kick back to login
+    if (!token || !userId || !username || !isAdmin) {
+        console.log('No valid admin session, redirecting to login.html');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Show first letter of username in the admin avatar (optional)
+    const adminAvatar = document.querySelector('.admin-avatar');
+    if (adminAvatar && typeof username === 'string' && username.length > 0) {
+        adminAvatar.textContent = username.charAt(0).toUpperCase();
+    }
+});
+</script>
+    <script src="admin-script.js"></script>
+</body>
+</html>
+
+
+
