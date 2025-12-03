@@ -35,7 +35,7 @@
                     <span class="nav-icon">📺</span>
                     <span class="nav-text">Streams</span>
                 </a>
-                <a href="../posts/index.html" class="nav-link" data-section-target="posts-section">
+                <a href="../posts/index.php" class="nav-link" data-section-target="posts-section">
                     <span class="nav-icon">🐦</span>
                     <span class="nav-text">Posts</span>
                 </a>
@@ -257,31 +257,7 @@
         </main>
     </div>
     <script src="../../Model/delete_post.js"></script>
-    <script>
-        function loadPosts() {
-            fetch('../../Model/get_posts.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const tbody = document.getElementById('recent-posts-table');
-                        tbody.innerHTML = '';
-                        data.posts.slice(0, 5).forEach(post => {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>${post.author_id}</td>
-                                <td>${post.content}</td>
-                                <td>${new Date(post.created_at).toLocaleString()}</td>
-                                <td><button class="action-btn btn-delete" type="button" data-id="${post.id}">Delete</button></td>
-                            `;
-                            tbody.appendChild(tr);
-                        });
-                    }
-                })
-                .catch(error => console.error('Error loading posts:', error));
-        }
-
-        window.onload = loadPosts;
-    </script>
+    <script src="../../Control/ADD Post Dashboard.js"></script>
 </body>
 </html>
 
