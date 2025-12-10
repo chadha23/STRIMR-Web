@@ -9,18 +9,12 @@ if (!isset($_GET['id'])) {
 
 $id = intval($_GET['id']);
 
-$sql = "SELECT id, username, email, full_name FROM users WHERE id = ? LIMIT 1";
+$sql = "SELECT id, username, email, full_name FROM users WHERE id = :id LIMIT 1";
 $stmt = $conn->prepare($sql);
-if (!$stmt) {
-    echo json_encode(['success' => false, 'error' => 'Failed to prepare statement']);
-    exit();
-}
+$stmt->execute([':id' => $id]);
+$row = $stmt->fetch();
 
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($row = $result->fetch_assoc()) {
+if ($row) {
     echo json_encode([
         'success' => true,
         'user'    => $row
@@ -28,6 +22,3 @@ if ($row = $result->fetch_assoc()) {
 } else {
     echo json_encode(['success' => false, 'error' => 'User not found']);
 }
-
-$stmt->close();
-$conn->close();

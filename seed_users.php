@@ -30,25 +30,27 @@ $users = [
     ]
 ];
 
-// Insert sample users
-$stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $username, $email, $hashed_password);
+try {
+    // Insert sample users
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
 
-$inserted_count = 0;
-foreach ($users as $user) {
-    $username = $user['username'];
-    $email = $user['email'];
-    $hashed_password = $user['password'];
+    $inserted_count = 0;
+    foreach ($users as $user) {
+        $username = $user['username'];
+        $email = $user['email'];
+        $hashed_password = $user['password'];
     
-    if ($stmt->execute()) {
+        $stmt->execute([
+            ':username' => $username,
+            ':email' => $email,
+            ':password' => $hashed_password
+        ]);
+
         $inserted_count++;
-    } else {
-        echo "Error inserting user {$username}: " . $conn->error . "<br>";
     }
+    
+    echo "Successfully inserted {$inserted_count} users.";
+} catch (PDOException $e) {
+    echo "Error inserting users: " . $e->getMessage();
 }
-
-echo "Successfully inserted {$inserted_count} users.";
-
-$stmt->close();
-$conn->close();
 ?>

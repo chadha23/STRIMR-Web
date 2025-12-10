@@ -7,8 +7,9 @@ $result = $conn->query($sql);
 
 $users = [];
 
-if ($result->num_rows > 0) {
-    while ($user = $result->fetch_assoc()) {
+if ($result) {
+    $fetchedUsers = $result->fetchAll();
+    foreach ($fetchedUsers as $user) {
         $users[] = [
             'id' => $user['id'],
             'name' => $user['username'],

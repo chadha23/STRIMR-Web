@@ -4,10 +4,9 @@ require_once 'db.php';
 
 $stmt = $conn->prepare("SELECT id, username, password, email FROM users WHERE username = 'admin'");
 $stmt->execute();
-$result = $stmt->get_result();
+$user = $stmt->fetch();
 
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
+if ($user) {
     echo "<h2>Admin User Info</h2>";
     echo "<p>ID: " . $user['id'] . "</p>";
     echo "<p>Username: " . $user['username'] . "</p>";
@@ -35,7 +34,5 @@ if ($result->num_rows > 0) {
     echo "<p>Admin user not found in database.</p>";
 }
 
-$stmt->close();
-$conn->close();
 ?>
 

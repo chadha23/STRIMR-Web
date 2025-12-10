@@ -9,10 +9,11 @@ $sql = "CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )";
 
-if ($conn->query($sql) === TRUE) {
+try {
+    $conn->exec($sql);
     echo "Users table created successfully!";
-} else {
-    echo "Error creating table: " . $conn->error;
+} catch (PDOException $e) {
+    echo "Error creating table: " . $e->getMessage();
 }
 
 ?>

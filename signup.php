@@ -35,75 +35,69 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 require_once 'db.php';
 
-if ($conn->connect_error) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Database connection failed']);
-    exit();
-}
-
-// Ensure the users table has a full_name column (ignore errors if it already exists)
-$hasFullName = false;
-$columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-if ($columnCheck && $columnCheck->num_rows > 0) {
-    $hasFullName = true;
-} else {
-    $conn->query("ALTER TABLE users ADD COLUMN full_name VARCHAR(100) NULL AFTER username");
+try {
+    // Ensure the users table has a full_name column (ignore errors if it already exists)
+    $hasFullName = false;
     $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-    if ($columnCheck && $columnCheck->num_rows > 0) {
+    if ($columnCheck && $columnCheck->fetch()) {
         $hasFullName = true;
+    } else {
+        $conn->exec("ALTER TABLE users ADD COLUMN full_name VARCHAR(100) NULL AFTER username");
+        $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
+        if ($columnCheck && $columnCheck->fetch()) {
+            $hasFullName = true;
+        }
     }
-}
 
-// Check for duplicates
-$check = $conn->prepare("SELECT id FROM users WHERE email = ? OR username = ? LIMIT 1");
-$check->bind_param("ss", $email, $username);
-$check->execute();
-$checkResult = $check->get_result();
+    // Check for duplicates
+    $check = $conn->prepare("SELECT id FROM users WHERE email = :email OR username = :username LIMIT 1");
+    $check->execute([
+        ':email' => $email,
+        ':username' => $username
+    ]);
+    $checkResult = $check->fetch();
 
-if ($checkResult->num_rows > 0) {
-    http_response_code(409);
-    echo json_encode(['success' => false, 'error' => 'Email or username already exists']);
-    $check->close();
-    $conn->close();
+    if ($checkResult) {
+        http_response_code(409);
+        echo json_encode(['success' => false, 'error' => 'Email or username already exists']);
+        exit();
+    }
+
+    $defaultPassword = '123';
+    $passwordHash = password_hash($defaultPassword, PASSWORD_DEFAULT);
+
+    if ($hasFullName) {
+        $stmt = $conn->prepare("INSERT INTO users (username, full_name, email, password, created_at) VALUES (:username, :full_name, :email, :password, NOW())");
+        $stmt->execute([
+            ':username' => $username,
+            ':full_name' => $fullName,
+            ':email' => $email,
+            ':password' => $passwordHash
+        ]);
+    } else {
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password, created_at) VALUES (:username, :email, :password, NOW())");
+        $stmt->execute([
+            ':username' => $username,
+            ':email' => $email,
+            ':password' => $passwordHash
+        ]);
+    }
+
+    $newUserId = $conn->lastInsertId();
+
+    $userQuery = $conn->prepare("SELECT id, username, email, created_at" . ($hasFullName ? ", full_name" : "") . " FROM users WHERE id = :id");
+    $userQuery->execute([':id' => $newUserId]);
+    $userData = $userQuery->fetch();
+
+    echo json_encode([
+        'success' => true,
+        'user' => $userData,
+        'defaultPassword' => $defaultPassword
+    ]);
     exit();
-}
-$check->close();
-
-$defaultPassword = '123';
-$passwordHash = password_hash($defaultPassword, PASSWORD_DEFAULT);
-
-if ($hasFullName) {
-    $stmt = $conn->prepare("INSERT INTO users (username, full_name, email, password, created_at) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->bind_param("ssss", $username, $fullName, $email, $passwordHash);
-} else {
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, NOW())");
-    $stmt->bind_param("sss", $username, $email, $passwordHash);
-}
-
-if (!$stmt->execute()) {
+} catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Failed to create user']);
-    $stmt->close();
-    $conn->close();
+    echo json_encode(['success' => false, 'error' => 'Database error']);
     exit();
 }
-
-$newUserId = $stmt->insert_id;
-$stmt->close();
-
-$userQuery = $conn->prepare("SELECT id, username, email, created_at" . ($hasFullName ? ", full_name" : "") . " FROM users WHERE id = ?");
-$userQuery->bind_param("i", $newUserId);
-$userQuery->execute();
-$userResult = $userQuery->get_result();
-$userData = $userResult->fetch_assoc();
-$userQuery->close();
-
-$conn->close();
-
-echo json_encode([
-    'success' => true,
-    'user' => $userData,
-    'defaultPassword' => $defaultPassword
-]);
-exit();
 

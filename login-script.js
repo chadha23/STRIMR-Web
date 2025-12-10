@@ -180,7 +180,7 @@ function hideMessage() {
  */
 function handleLogin(event) {
     // DEBUG: Log that function was called
-    alert("handleLogin() CALLED");
+    alert("Logging in...");
     console.log('=== handleLogin CALLED ===');
     console.log('Event:', event);
     
@@ -589,6 +589,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 });
-
 
 

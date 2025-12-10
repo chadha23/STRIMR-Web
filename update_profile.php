@@ -25,65 +25,56 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-// Check for duplicates (other users with same email or username)
-$checkSql = "SELECT id FROM users WHERE (email = ? OR username = ?) AND id <> ? LIMIT 1";
-$check = $conn->prepare($checkSql);
-if (!$check) {
-    echo json_encode(['success' => false, 'error' => 'Failed to prepare duplicate check']);
-    exit();
-}
-$check->bind_param("ssi", $email, $username, $id);
-$check->execute();
-$result = $check->get_result();
+try {
+    // Check for duplicates (other users with same email or username)
+    $checkSql = "SELECT id FROM users WHERE (email = :email OR username = :username) AND id <> :id LIMIT 1";
+    $check = $conn->prepare($checkSql);
+    $check->execute([
+        ':email' => $email,
+        ':username' => $username,
+        ':id' => $id
+    ]);
+    $result = $check->fetch();
 
-if ($result->num_rows > 0) {
-    echo json_encode(['success' => false, 'error' => 'Email or username already used by another account']);
-    $check->close();
-    $conn->close();
-    exit();
-}
-$check->close();
+    if ($result) {
+        echo json_encode(['success' => false, 'error' => 'Email or username already used by another account']);
+        exit();
+    }
 
-// Ensure full_name column exists (like in signup.php)
-$hasFullName = false;
-$columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-if ($columnCheck && $columnCheck->num_rows > 0) {
-    $hasFullName = true;
-} else {
-    $conn->query("ALTER TABLE users ADD COLUMN full_name VARCHAR(100) NULL AFTER username");
+    // Ensure full_name column exists (like in signup.php)
+    $hasFullName = false;
     $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-    if ($columnCheck && $columnCheck->num_rows > 0) {
+    if ($columnCheck && $columnCheck->fetch()) {
         $hasFullName = true;
+    } else {
+        $conn->exec("ALTER TABLE users ADD COLUMN full_name VARCHAR(100) NULL AFTER username");
+        $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
+        if ($columnCheck && $columnCheck->fetch()) {
+            $hasFullName = true;
+        }
     }
-}
 
-// Update query
-if ($hasFullName) {
-    $sql = "UPDATE users SET username = ?, full_name = ?, email = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        echo json_encode(['success' => false, 'error' => 'Failed to prepare update']);
-        exit();
+    // Update query
+    if ($hasFullName) {
+        $sql = "UPDATE users SET username = :username, full_name = :full_name, email = :email WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':username' => $username,
+            ':full_name' => $full_name,
+            ':email' => $email,
+            ':id' => $id
+        ]);
+    } else {
+        $sql = "UPDATE users SET username = :username, email = :email WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':username' => $username,
+            ':email' => $email,
+            ':id' => $id
+        ]);
     }
-    $stmt->bind_param("sssi", $username, $full_name, $email, $id);
-} else {
-    $sql = "UPDATE users SET username = ?, email = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        echo json_encode(['success' => false, 'error' => 'Failed to prepare update']);
-        exit();
-    }
-    $stmt->bind_param("ssi", $username, $email, $id);
-}
 
-if (!$stmt->execute()) {
+    echo json_encode(['success' => true]);
+} catch (PDOException $e) {
     echo json_encode(['success' => false, 'error' => 'Failed to update profile']);
-    $stmt->close();
-    $conn->close();
-    exit();
 }
-
-$stmt->close();
-$conn->close();
-
-echo json_encode(['success' => true]);

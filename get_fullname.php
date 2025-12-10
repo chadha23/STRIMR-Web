@@ -9,10 +9,12 @@ if (!isset($_GET['id'])) {
 
 $id = intval($_GET['id']);
 
-$sql = "SELECT full_name FROM users WHERE id = $id LIMIT 1";
-$result = $conn->query($sql);
+$sql = "SELECT full_name FROM users WHERE id = :id LIMIT 1";
+$stmt = $conn->prepare($sql);
+$stmt->execute([':id' => $id]);
+$row = $stmt->fetch();
 
-if ($result && $row = $result->fetch_assoc()) {
+if ($row) {
     echo json_encode([
         'success' => true,
         'full_name' => $row['full_name']
