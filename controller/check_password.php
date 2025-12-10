@@ -205,7 +205,6 @@ if (isset($loadError)) {
         
         // Generate new hash for testing
         $newHash = password_hash('123', PASSWORD_DEFAULT);
-        echo "<li class='status-item summary'>New hash for '123': " . substr($newHash, 0, 50) . "...</li>";
         
         // Test new hash
         $verifyNew = password_verify('123', $newHash);
