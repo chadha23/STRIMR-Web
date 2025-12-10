@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once 'db.php';
+require_once __DIR__ . '/../model/db.php';
 
 $raw = file_get_contents('php://input');
 $payload = json_decode($raw, true);

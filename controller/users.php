@@ -1,6 +1,6 @@
 <?php
 
-include "db.php";
+require_once __DIR__ . '/../model/db.php';
 $sql = "CREATE TABLE users (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,

@@ -109,10 +109,10 @@ function switchSection(section) {
 let latestUserFromDB = null;
 
 function loadDashboard() {
-    fetch('admin_stats.php')
+    fetch('../controller/admin_stats.php')
         .then(response => response.json())
         .then(data => {
-            console.log('admin_stats.php result:', data);
+            console.log('../controller/admin_stats.php result:', data);
 
             if (!data.success || !data.stats) {
                 console.error('Failed to load real stats from backend:', data.error);
@@ -143,7 +143,7 @@ function loadDashboard() {
             loadRecentActivity();
         })
         .catch(err => {
-            console.error('Error calling admin_stats.php:', err);
+            console.error('Error calling ../controller/admin_stats.php:', err);
             updateStats({
                 totalUsers: 0,
                 activeUsers: 0,
@@ -242,7 +242,7 @@ function loadRecentActivity() {
 // ============================================
 
 function loadUsers() {
-    fetch(`./users_section.php?page=${currentPage}`)
+    fetch(`../controller/users_section.php?page=${currentPage}`)
         .then(response => response.json())
         .then(data => 
             { 

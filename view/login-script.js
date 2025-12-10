@@ -249,7 +249,7 @@ function handleLogin(event) {
     localStorage.removeItem('isAdmin');
     
     // Send to PHP backend
-    fetch('login.php', {
+    fetch('../controller/login.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -470,7 +470,7 @@ function handleSignup(event) {
         username: username
     };
     
-    fetch('signup.php', {
+    fetch('../controller/signup.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -589,5 +589,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 });
-
-

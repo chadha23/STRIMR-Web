@@ -152,7 +152,7 @@
         });
 
         // Fetch profile data
-        fetch('get_profile.php?id=' + encodeURIComponent(userId))
+        fetch('../controller/get_profile.php?id=' + encodeURIComponent(userId))
             .then(res => res.json())
             .then(data => {
                 if (!data.success) {
@@ -185,7 +185,7 @@
                 return;
             }
 
-            fetch('update_profile.php', {
+            fetch('../controller/update_profile.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, username, full_name: fullName, email })

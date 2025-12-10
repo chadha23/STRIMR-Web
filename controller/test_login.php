@@ -8,7 +8,7 @@ echo "<h2>Testing Login.php</h2>";
 // Test 1: Invalid user
 echo "<h3>Test 1: Invalid user (randomuser123)</h3>";
 $data = json_encode(['email' => 'randomuser123', 'password' => 'randompass']);
-$ch = curl_init('http://localhost/STRIMR-Web/login.php');
+$ch = curl_init('http://localhost/STRIMR-Web/controller/login.php');
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -25,7 +25,7 @@ echo "Success: " . ($result['success'] ?? 'not set') . "<br><br>";
 // Test 2: Valid user with wrong password
 echo "<h3>Test 2: Valid user (admin) with wrong password</h3>";
 $data = json_encode(['email' => 'admin', 'password' => 'wrongpassword']);
-$ch = curl_init('http://localhost/STRIMR-Web/login.php');
+$ch = curl_init('http://localhost/STRIMR-Web/controller/login.php');
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -42,7 +42,7 @@ echo "Success: " . ($result['success'] ?? 'not set') . "<br><br>";
 // Test 3: Valid user with correct password
 echo "<h3>Test 3: Valid user (admin) with correct password (123)</h3>";
 $data = json_encode(['email' => 'admin', 'password' => '123']);
-$ch = curl_init('http://localhost/STRIMR-Web/login.php');
+$ch = curl_init('http://localhost/STRIMR-Web/controller/login.php');
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);

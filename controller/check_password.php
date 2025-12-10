@@ -1,6 +1,6 @@
 <?php
 // Check if admin password hash is correct
-require_once 'db.php';
+require_once __DIR__ . '/../model/db.php';
 
 $stmt = $conn->prepare("SELECT id, username, password, email FROM users WHERE username = 'admin'");
 $stmt->execute();

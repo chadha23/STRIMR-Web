@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-include "db.php";
+require_once __DIR__ . '/../model/db.php';
 
 $sql = "SELECT * FROM users ORDER BY id DESC";
 $result = $conn->query($sql);

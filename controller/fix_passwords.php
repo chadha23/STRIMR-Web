@@ -1,6 +1,6 @@
 <?php
 // Fix password hashes for all users - set all to '123'
-require_once 'db.php';
+require_once __DIR__ . '/../model/db.php';
 
 $users = ['admin', 'fawzi', 'chavion', 'harissa', 'ezdin'];
 $newPassword = '123';
@@ -35,7 +35,7 @@ try {
     
     echo "<h3>Updated $updated users</h3>";
     echo "<p>All passwords are now: <strong>$newPassword</strong></p>";
-    echo "<p><a href='check_password.php'>Verify passwords</a> | <a href='login.html'>Go to login page</a></p>";
+    echo "<p><a href='check_password.php'>Verify passwords</a> | <a href='../view/login.html'>Go to login page</a></p>";
 } catch (PDOException $e) {
     echo "<p>✗ Failed to update passwords: " . $e->getMessage() . "</p>";
 }

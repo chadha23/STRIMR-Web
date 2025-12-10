@@ -33,7 +33,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-require_once 'db.php';
+require_once __DIR__ . '/../model/db.php';
 
 try {
     // Ensure the users table has a full_name column (ignore errors if it already exists)

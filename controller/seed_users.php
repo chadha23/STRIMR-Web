@@ -1,5 +1,5 @@
 <?php
-include "db.php";
+require_once __DIR__ . '/../model/db.php';
 
 // Sample user data with password "123" for all users
 $users = [
