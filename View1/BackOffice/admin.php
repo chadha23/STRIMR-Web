@@ -1,262 +1,251 @@
-<!DOCTYPE html>
 <?php
 require_once __DIR__ . '/../../controllers/ServerController.php';
 require_once __DIR__ . '/../../controllers/MessageController.php';
 require_once __DIR__ . '/../../models/Server.php';
+require_once __DIR__ . '/../../controllers/NotificationController.php';
+
+$notifC = new NotificationController();
+$notifications = $notifC->getAll();
 
 $serverC  = new ServerController();
 $messageC = new MessageController();
 
-// === GESTION DES ACTIONS (ajout, edit, delete) ===
+/// === APRÈS L'AJOUT D'UN SERVEUR ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addServer'])) {
     if (!empty(trim($_POST['name']))) {
         $server = new Server(null, trim($_POST['name']));
         $serverC->addServer($server);
+        $notifC->add("Nouveau serveur créé : " . htmlspecialchars(trim($_POST['name'])));
     }
     header("Location: admin.php#servers");
     exit;
 }
 
+// === APRÈS LA MODIFICATION D'UN SERVEUR ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editServer'])) {
     $id = (int)$_POST['id'];
     $name = trim($_POST['name']);
     if ($id && $name !== '') {
         $updated = new Server($id, $name);
         $serverC->updateServer($updated, $id);
+        $notifC->add("Serveur modifié : \"$name\"");
     }
     header("Location: admin.php#servers");
     exit;
 }
 
+// === SUPPRESSION SERVEUR / MESSAGE ===
 if (isset($_GET['delete_server'])) {
     $id = (int)$_GET['delete_server'];
-    if ($id > 0) $serverC->deleteServer($id);
+    if ($id > 0) {
+        $serverC->deleteServer($id);
+        $notifC->add("Serveur supprimé (ID: $id)");
+    }
     header("Location: admin.php#servers");
     exit;
 }
-
 if (isset($_GET['delete_message'])) {
     $id = (int)$_GET['delete_message'];
-    if ($id > 0) $messageC->deleteMessage($id);
+    if ($id > 0) {
+        $messageC->deleteMessage($id);
+        $notifC->add("Message supprimé (ID: $id)");
+    }
     header("Location: admin.php#messages");
     exit;
 }
 
-// === RECHERCHE + TRI ALPHABÉTIQUE ===
+$total_servers  = $serverC->countServers();
+$total_messages = $messageC->countMessages();
+
+// Recherche + tri alphabétique
 $search = trim($_GET['search'] ?? '');
-
-if ($search !== '') {
-    // Recherche avec LIKE
-    $allServers = $serverC->searchServers($search);
-} else {
-    // Liste complète
-    $allServers = $serverC->listServers();
-}
-
-// TRI ALPHABÉTIQUE PAR NOM (insensible à la casse)
-usort($allServers, function($a, $b) {
-    return strcasecmp($a['name'], $b['name']); // strcasecmp = ignore majuscules
-});
-
-// On garde les deux variables pour compatibilité
+$allServers = $search !== '' ? $serverC->searchServers($search) : $serverC->listServers();
+usort($allServers, fn($a, $b) => strcasecmp($a['name'], $b['name']));
 $servers  = $allServers;
 $messages = $messageC->getAllMessages();
 ?>
-?>
-
-<html lang="en">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Discord Clone</title>
     <link rel="stylesheet" href="admin-styles.css">
+    <style>
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+    </style>
 </head>
-<script src="admin.js"></script>
-
 <body>
-    <!-- ============================================
-         ADMIN DASHBOARD PAGE
-         ============================================ -->
-    <div class="admin-container">
-        <!-- ============================================
-             SIDEBAR NAVIGATION
-             ============================================ -->
-        <aside class="admin-sidebar">
-            <div class="sidebar-header">
-                <h2 class="sidebar-title">Admin Panel</h2>
-                <div class="admin-avatar">A</div>
-            </div>
 
-            <nav class="sidebar-nav">
-                <a href="#dashboard" class="nav-link active" onclick="switchSection('dashboard')">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-                <a href="#users" class="nav-link" onclick="switchSection('users')">
-                    <span class="nav-icon">👥</span>
-                    <span class="nav-text">Users</span>
-                </a>
-                <a href="#servers" class="nav-link" onclick="switchSection('servers')">
-                    <span class="nav-icon">💬</span>
-                    <span class="nav-text">Servers</span>
-                </a>
-                <a href="#messages" class="nav-link" onclick="switchSection('messages')">
-                    <span class="nav-icon">💌</span>
-                    <span class="nav-text">Messages</span>
-                </a>
-                <a href="#streams" class="nav-link" onclick="switchSection('streams')">
-                    <span class="nav-icon">📺</span>
-                    <span class="nav-text">Streams</span>
-                </a>
-                <a href="#posts" class="nav-link" onclick="switchSection('posts')">
-                    <span class="nav-icon">🐦</span>
-                    <span class="nav-text">Posts</span>
-                </a>
-                <a href="#settings" class="nav-link" onclick="switchSection('settings')">
-                    <span class="nav-icon">⚙️</span>
-                    <span class="nav-text">Settings</span>
-                </a>
-            </nav>
+<div class="admin-container">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Admin Panel</h2>
+            <div class="admin-avatar">A</div>
+        </div>
 
-            <div class="sidebar-footer">
-                <button class="logout-btn" onclick="handleAdminLogout()">
-                    <span class="nav-icon">🚪</span>
-                    <span class="nav-text">Logout</span>
-                </button>
-            </div>
-        </aside>
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-link active" onclick="switchSection('dashboard'); return false;">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="#users" class="nav-link" onclick="switchSection('users'); return false;">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Users</span>
+            </a>
+            <a href="#servers" class="nav-link" onclick="switchSection('servers'); return false;">
+                <span class="nav-icon">💬</span>
+                <span class="nav-text">Servers</span>
+            </a>
+            <a href="#messages" class="nav-link" onclick="switchSection('messages'); return false;">
+                <span class="nav-icon">💌</span>
+                <span class="nav-text">Messages</span>
+            </a>
+            <a href="#streams" class="nav-link" onclick="switchSection('streams'); return false;">
+                <span class="nav-icon">📺</span>
+                <span class="nav-text">Streams</span>
+            </a>
+            <a href="#posts" class="nav-link" onclick="switchSection('posts'); return false;">
+                <span class="nav-icon">🐦</span>
+                <span class="nav-text">Posts</span>
+            </a>
+            <a href="#settings" class="nav-link" onclick="switchSection('settings'); return false;">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Settings</span>
+            </a>
+        </nav>
 
-        <!-- ============================================
-             MAIN CONTENT AREA
-             ============================================ -->
-        <main class="admin-main">
-            <!-- Top Header -->
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="handleAdminLogout()">
+                <span class="nav-icon">Exit</span>
+                <span class="nav-text">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+        <!-- DASHBOARD -->
+        <section id="dashboard-section" class="content-section active">
             <header class="admin-header">
                 <div class="header-left">
                     <h1 class="page-title" id="page-title">Dashboard</h1>
                     <p class="page-subtitle" id="page-subtitle">Overview of your platform</p>
                 </div>
-               
             </header>
 
-            <!-- DASHBOARD SECTION -->
-            <section id="dashboard-section" class="content-section active">
-                <!-- Statistics Cards -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon users-icon">👥</div>
-                        <div class="stat-content">
-                            <div class="stat-label">Total Users</div>
-                            <div class="stat-value" id="stat-total-users">0</div>
-                            <div class="stat-change positive">+12% from last month</div>
-                        </div>
+            <!-- Toutes tes stats cards (exactement comme avant) -->
+            <div class="stats-grid">
+                <!-- Total Users -->
+                <div class="stat-card">
+                    <div class="stat-icon users-icon">👥</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Users</div>
+                        <div class="stat-value" id="stat-total-users">0</div>
+                        <div class="stat-change positive">+12% from last month</div>
                     </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon active-icon">🟢</div>
-                        <div class="stat-content">
-                            <div class="stat-label">Active Users</div>
-                            <div class="stat-value" id="stat-active-users">0</div>
-                            <div class="stat-change positive">Online now</div>
-                        </div>
+                </div>
+                <!-- Active Users -->
+                <div class="stat-card">
+                    <div class="stat-icon active-icon">🟢</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Active Users</div>
+                        <div class="stat-value" id="stat-active-users">0</div>
+                        <div class="stat-change">Online now</div>
                     </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon messages-icon">💌</div>
-                        <div class="stat-content">
-                            <div class="stat-label">Total Messages</div>
-                            <div class="stat-value" id="stat-total-messages">0</div>
-                            <div class="stat-change positive">+5.2% from last week</div>
-                        </div>
+                </div>
+                <!-- Total Servers -->
+                <div class="stat-card">
+                    <div class="stat-icon servers-icon">💬</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Servers</div>
+                        <div class="stat-value"><?= number_format($total_servers) ?></div>
+                        <div class="stat-change">Actifs sur la plateforme</div>
                     </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon servers-icon">💬</div>
-                        <div class="stat-content">
-                            <div class="stat-label">Total Servers</div>
-                            <div class="stat-value" id="stat-total-servers">0</div>
-                            <div class="stat-change">Active servers</div>
-                        </div>
+                </div>
+                <!-- Total Messages -->
+                <div class="stat-card">
+                    <div class="stat-icon messages-icon">💌</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Messages</div>
+                        <div class="stat-value"><?= number_format($total_messages) ?></div>
+                        <div class="stat-change positive">Depuis le lancement</div>
                     </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon streams-icon">📺</div>
-                        <div class="stat-content">
-                            <div class="stat-label">Live Streams</div>
-                            <div class="stat-value" id="stat-live-streams">0</div>
-                            <div class="stat-change positive">Currently streaming</div>
-                        </div>
+                </div>
+                <!-- Live Streams & Posts (inchangés) -->
+                <div class="stat-card">
+                    <div class="stat-icon streams-icon">📺</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Live Streams</div>
+                        <div class="stat-value" id="stat-live-streams">0</div>
+                        <div class="stat-change">Currently streaming</div>
                     </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon posts-icon">🐦</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Posts</div>
+                        <div class="stat-value" id="stat-total-posts">0</div>
+                        <div class="stat-change positive">+8.1% from last week</div>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="stat-card">
-                        <div class="stat-icon posts-icon">🐦</div>
-                        <div class="stat-content">
-                            <div class="stat-label">Total Posts</div>
-                            <div class="stat-value" id="stat-total-posts">0</div>
-                            <div class="stat-change positive">+8.1% from last week</div>
+            <!-- Graphiques + Activité récente (exactement ton code) -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title">User Growth</h3>
+                    <div class="chart-placeholder" id="user-growth-chart">
+                        <div class="chart-bars">
+                            <div class="chart-bar" style="height: 60%;"></div>
+                            <div class="chart-bar" style="height: 75%;"></div>
+                            <div class="chart-bar" style="height: 85%;"></div>
+                            <div class="chart-bar" style="height: 70%;"></div>
+                            <div class="chart-bar" style="height: 90%;"></div>
+                            <div class="chart-bar" style="height: 100%;"></div>
+                            <div class="chart-bar" style="height: 95%;"></div>
+                        </div>
+                        <div class="chart-labels">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Charts/Graphs Area -->
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <h3 class="chart-title">User Growth</h3>
-                        <div class="chart-placeholder" id="user-growth-chart">
-                            <div class="chart-bars">
-                                <div class="chart-bar" style="height: 60%;"></div>
-                                <div class="chart-bar" style="height: 75%;"></div>
-                                <div class="chart-bar" style="height: 85%;"></div>
-                                <div class="chart-bar" style="height: 70%;"></div>
-                                <div class="chart-bar" style="height: 90%;"></div>
-                                <div class="chart-bar" style="height: 100%;"></div>
-                                <div class="chart-bar" style="height: 95%;"></div>
+                <div class="chart-card">
+                    <h3 class="chart-title">Activity Overview</h3>
+                    <div class="activity-list">
+                        <?php if (empty($notifications)): ?>
+                            <div class="activity-empty">Aucune activité récente</div>
+                        <?php else: foreach ($notifications as $n): ?>
+                            <div class="activity-item">
+                                <div class="activity-content">
+                                    <div class="activity-text"><?= htmlspecialchars($n->content) ?></div>
+                                </div>
+                                <div class="activity-time"><?= date('H:i', strtotime($n->created_at)) ?></div>
                             </div>
-                            <div class="chart-labels">
-                                <span>Mon</span>
-                                <span>Tue</span>
-                                <span>Wed</span>
-                                <span>Thu</span>
-                                <span>Fri</span>
-                                <span>Sat</span>
-                                <span>Sun</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="chart-card">
-                        <h3 class="chart-title">Activity Overview</h3>
-                        <div class="activity-list" id="activity-list">
-                            <!-- Activity items will be inserted here -->
-                        </div>
+                        <?php endforeach; endif; ?>
                     </div>
                 </div>
+            </div>
 
-                <!-- Recent Activity Table -->
-                <div class="table-card">
-                    <div class="table-header">
-                        <h3 class="table-title">Recent Activity</h3>
-                        <button class="view-all-btn" onclick="switchSection('messages')">View All</button>
-                    </div>
-                    <div class="table-container">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Action</th>
-                                    <th>Details</th>
-                                    <th>Time</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recent-activity-table">
-                                <!-- Table rows will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="table-card">
+                <div class="table-header">
+                    <h3 class="table-title">Recent Activity</h3>
+                    <button class="view-all-btn" onclick="switchSection('messages')">View All</button>
                 </div>
-            </section>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead><tr><th>User</th><th>Action</th><th>Details</th><th>Time</th></tr></thead>
+                        <tbody id="recent-activity-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
 
-            <!-- USERS SECTION -->
+        <!-- USERS SECTION -->
             <section id="users-section" class="content-section">
                 <div class="section-header">
                     <h2 class="section-title">User Management</h2>
@@ -314,7 +303,7 @@ $messages = $messageC->getAllMessages();
                     <button class="page-btn" onclick="changePage(1)">Next →</button>
                 </div>
             </section>
-<!-- SERVERS SECTION - CORRIGÉE À 100% -->
+<!-- SERVERS SECTION  -->
 <section id="servers-section" class="content-section">
     <!-- En-tête avec titre + recherche à droite -->
     <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
@@ -405,53 +394,54 @@ $messages = $messageC->getAllMessages();
    
 
 
+        <!-- MESSAGES SECTION (CORRIGÉ : id changé) -->
+        <section id="messages-section" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Message Management</h2>
+                <p class="page-subtitle">Tous les messages envoyés par les utilisateurs</p>
+            </div>
+            <div class="table-card">
+                <div class="table-container">
+                    <?php if (empty($messages)): ?>
+                        <p style="text-align:center; padding:60px; color:#888; font-size:1.1em;">Aucun message pour le moment</p>
+                    <?php else: ?>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>DE</th><th>À</th><th>CONTENU</th><th>SERVEUR</th><th>DATE / HEURE</th><th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($messages as $msg): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($msg['id']) ?></td>
+                                    <td><strong>#<?= htmlspecialchars($msg['sender_id']) ?></strong></td>
+                                    <td><strong>#<?= htmlspecialchars($msg['receiver_id']) ?></strong></td>
+                                    <td style="max-width:500px; word-wrap:break-word; font-size:0.95em;">
+                                        <?= htmlspecialchars($msg['content']) ?>
+                                    </td>
+                                    <td><?= htmlspecialchars($msg['server_id']) ?></td>
+                                    <td><?= date('d/m/Y H:i:s', strtotime($msg['created_at'])) ?></td>
+                                    <td>
+                                        <a href="admin.php?delete_message=<?= $msg['id'] ?>#messages"
+                                           style="color:#f04747; font-weight:bold; text-decoration:none;"
+                                           onclick="return confirm('Supprimer ce message ?')">
+                                           Supprimer
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
 
-            <!-- MESSAGES SECTION - FONCTIONNELLE -->
-<section id="messages-section" class="content-section">
-    <div class="section-header">
-        <h2 class="section-title">Message Management</h2>
-        <p class="page-subtitle">Tous les messages envoyés par les utilisateurs</p>
-    </div>
+        
+        
 
-    <div class="table-card">
-        <div class="table-container">
-            <?php if (empty($messages)): ?>
-                <p style="text-align:center; padding:40px; color:#888;">Aucun message pour le moment</p>
-            <?php else: ?>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>CONTENU</th>
-                            <th>SERVER ID</th>
-                            <th>DATE / HEURE</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($messages as $msg): ?>
-                            <tr>
-                                <td><?= $msg['id'] ?></td>
-                                <td style="max-width:600px; word-wrap:break-word;">
-                                    <?= htmlspecialchars($msg['content']) ?>
-                                </td>
-                                <td><?= $msg['server_id'] ?></td>
-                                <td><?= date('d/m/Y H:i:s', strtotime($msg['created_at'])) ?></td>
-                                <td>
-                                    <a href="admin.php?delete_message=<?= $msg['id'] ?>#messages"
-                                       style="color:#f04747; font-weight:bold;"
-                                       onclick="return confirm('Supprimer ce message ?')">
-                                       Supprimer
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endif; ?>
-        </div>
-    </div>
-</section>
+
 
             <!-- STREAMS SECTION -->
             <section id="streams-section" class="content-section">
@@ -573,76 +563,22 @@ $messages = $messageC->getAllMessages();
         </div>
     </div>
 
-        <script>
-        // Fonction pour afficher la bonne section
-        function switchSection(section) {
-            // Cache toutes les sections
-            document.querySelectorAll('.content-section').forEach(s => {
-                s.style.display = 'none';
-                s.classList.remove('active');
-            });
+       
 
-            // Affiche la section demandée
-            const target = document.getElementById(section + '-section');
-            if (target) {
-                target.style.display = 'block';
-                target.classList.add('active');
-            }
+<script src="admin.js"></script>
 
-            // Met à jour le menu actif
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            const activeLink = document.querySelector(`a[href="#${section}"]`);
-            if (activeLink) activeLink.classList.add('active');
-
-            // Met à jour le titre
-            document.getElementById('page-title').textContent = 
-                section.charAt(0).toUpperCase() + section.slice(1);
-        }
-
-        // Au chargement de la page → on lit le # dans l'URL
-        window.addEventListener('load', () => {
-            let hash = window.location.hash.substring(1); // enlève le #
-            if (hash === '') hash = 'dashboard'; // par défaut
-            switchSection(hash);
-        });
-
-        // Quand on clique sur un lien du menu
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const section = this.getAttribute('href').substring(1);
-                switchSection(section);
-                history.pushState(null, null, '#' + section);
-            });
-        });
-   
-// RECHERCHE EN TEMPS RÉEL DANS LES SERVEURS
-function filterServersTable() {
-    const input = document.getElementById("server-search-input");
-    const filter = input.value.toLowerCase();
-    const rows = document.querySelectorAll("#servers-table-body tr");
-
-    rows.forEach(row => {
-        const nameCell = row.cells[1]; // 2e colonne = nom du serveur
-        if (nameCell) {
-            const text = nameCell.textContent || nameCell.innerText;
-            row.style.display = text.toLowerCase().includes(filter) ? "" : "none";
-        }
-    });
-}
-
-// Vide la recherche quand on change d'onglet
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        const input = document.getElementById('server-search-input');
-        if (input) input.value = '';
-    });
-});
+<!-- Petit script pour gérer le #hash au chargement -->
+<script>
+    // Active la bonne section selon le #hash
+    function activateSectionFromHash() {
+        const hash = window.location.hash.substring(1) || 'dashboard';
+        switchSection(hash);
+    }
+    window.addEventListener('load', activateSectionFromHash);
+    window.addEventListener('hashchange', activateSectionFromHash);
 </script>
-</body>
 
+</body>
 </html>
 
 
