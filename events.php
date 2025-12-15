@@ -6,7 +6,6 @@ $eventC = new EventsC();
 $reservationC = new ReservationC();
 
 // Récupérer les données AVEC fetchAll()
-$listeEvents = $eventC->afficherEvents()->fetchAll();
 
 // Vérifiez que la méthode existe dans votre ReservationC
 $listeReservations = [];
@@ -16,6 +15,16 @@ if (method_exists($reservationC, 'afficherReservationsAvecDetails')) {
     // Fallback: Récupérer les réservations de base
     $listeReservations = $reservationC->afficherReservations()->fetchAll();
 }
+
+$limit = 4; // nombre d’events par page
+$page = isset($_GET['page']) && $_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+$totalEvents = $eventC->countEvents();
+$totalPages = ceil($totalEvents / $limit);
+
+$listeEvents = $eventC->afficherEventsPagines($limit, $offset)->fetchAll();
+
 
 ?>
 
@@ -27,6 +36,58 @@ if (method_exists($reservationC, 'afficherReservationsAvecDetails')) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Discord Clone</title>
     <link rel="stylesheet" href="admin-styles.css">
+    <style>
+        /* Export button design */
+        .export-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 20px rgba(200, 30, 30, 0.18);
+            cursor: pointer;
+            transition: transform 120ms ease, box-shadow 160ms ease, background 160ms ease;
+        }
+
+        .export-btn i { font-size: 1.05rem; }
+
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(200, 30, 30, 0.18);
+        }
+
+        .export-btn:active { transform: translateY(-1px); }
+
+        .export-btn:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+            filter: grayscale(0.05);
+        }
+
+        /* Loading / spinner icon */
+        .export-btn .fa-spinner, .export-btn .fa-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Success state — applied by JS by toggling class 'success' */
+        .export-btn.success {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            box-shadow: 0 8px 20px rgba(33, 136, 56, 0.18);
+        }
+
+        /* Small focus style for accessibility */
+        .export-btn:focus {
+            outline: 3px solid rgba(255,255,255,0.12);
+            outline-offset: 2px;
+        }
+    </style>
 </head>
 
 <body>
@@ -305,7 +366,79 @@ if (method_exists($reservationC, 'afficherReservationsAvecDetails')) {
                     <div class="table-header">
                         <h3 class="table-title">Recent Activity</h3>
                         <button class="view-all-btn" onclick="openAddEvent()">Add Event</button>
+<button class="export-btn" onclick="confirmExport()">
+    <i class="fas fa-file-pdf"></i> Export PDF
+</button>
+
+<script>
+function confirmExport() {
+    if (confirm('Voulez-vous exporter un rapport PDF avec statistiques ?\n\nLe PDF inclura :\n✓ Tous les événements\n✓ Toutes les réservations\n✓ Statistiques détaillées\n✓ Date d\'exportation')) {
+        exportPDF(event);
+    }
+}
+
+function exportPDF(event) {
+    // Afficher l'indicateur de chargement
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+    btn.disabled = true;
+    
+    // Ajouter un minuteur pour le feedback
+    let seconds = 0;
+    const timer = setInterval(() => {
+        seconds++;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Génération... (${seconds}s)`;
+    }, 1000);
+    
+    // Générer le PDF
+    const url = 'export_pdf.php?action=export&type=all';
+    const newWindow = window.open(url, '_blank');
+    
+    // Réinitialiser le bouton après succès
+    setTimeout(() => {
+        clearInterval(timer);
+        btn.innerHTML = '<i class="fas fa-check"></i> Terminé !';
+        btn.style.background = 'linear-gradient(135deg, #28a745, #218838)';
+        
+        // Réinitialiser après 2 secondes
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = 'linear-gradient(135deg, #dc3545, #c82333)';
+            btn.disabled = false;
+        }, 2000);
+    }, 3000);
+}
+</script>
+
+
+
+<style>.pagination {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    margin: 0 3px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+}
+
+.page-btn.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+</style>
                     </div>
+
+
+
+
+                    
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
@@ -359,6 +492,26 @@ if (method_exists($reservationC, 'afficherReservationsAvecDetails')) {
 
                         </table>
                     </div>
+
+
+
+                    <div class="pagination">
+    <?php if ($page > 1): ?>
+        <a href="?page=<?= $page - 1 ?>" class="page-btn">« Prev</a>
+    <?php endif; ?>
+
+    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+        <a href="?page=<?= $i ?>" 
+           class="page-btn <?= ($i == $page) ? 'active' : '' ?>">
+            <?= $i ?>
+        </a>
+    <?php endfor; ?>
+
+    <?php if ($page < $totalPages): ?>
+        <a href="?page=<?= $page + 1 ?>" class="page-btn">Next »</a>
+    <?php endif; ?>
+</div>
+
                 </div>
 
 
