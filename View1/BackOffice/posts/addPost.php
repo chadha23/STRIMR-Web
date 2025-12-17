@@ -136,13 +136,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <?php if ($error) echo '<div class="error">' . htmlspecialchars($error) . '</div>'; ?>
                 <?php if ($success) echo '<div class="success">' . htmlspecialchars($success) . '</div>'; ?>
 
-                <form method="POST" action="">
+                <form method="POST" action="" onsubmit="return validateForm()">
                     <label for="content">Post Content:</label>
                     <textarea 
                         id="content" 
                         name="content" 
                         placeholder="Enter post content here..."
-                        required
                     ></textarea>
 
                     <div>
@@ -153,6 +152,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             </div>
         </main>
     </div>
+    <script>
+        function validateForm() {
+            const content = document.getElementById('content').value.trim();
+            if (content === '') {
+                alert('Please fill in the content field');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
 
