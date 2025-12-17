@@ -62,17 +62,28 @@ if (isset($_POST['content'])) {
 
     <?php if ($error) echo '<p style="color:red;">' . $error . '</p>'; ?>
 
-    <form action="" method="POST">
+    <form action="" method="POST" onsubmit="return validateForm()">
 
         <input type="hidden" name="id" value="<?php echo $id; ?>">
 
         <label>Contenu :</label><br>
 
-        <textarea name="content" rows="4"><?php echo htmlspecialchars($post['content']); ?></textarea><br>
+        <textarea id="content" name="content" rows="4"><?php echo htmlspecialchars($post['content']); ?></textarea><br>
 
         <button type="submit">Mettre à jour</button>
 
     </form>
+    
+    <script>
+        function validateForm() {
+            const content = document.getElementById('content').value.trim();
+            if (content === '') {
+                alert('Please fill in the content field');
+                return false;
+            }
+            return true;
+        }
+    </script>
 
 </body>
 </html>
