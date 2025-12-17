@@ -1,8 +1,10 @@
 <?php 
 require_once __DIR__.'/../../../Controller/PostController.php';
 require_once __DIR__.'/../../../Controller/ReactionController.php';
+require_once __DIR__.'/../../../Controller/CommentController.php';
 $postC = new PostController();
 $reactionC = new ReactionController();
+$commentC = new CommentController();
 $list = $postC->getAllPosts();
 ?>
 
@@ -99,6 +101,7 @@ $list = $postC->getAllPosts();
                                     <th>Author</th>
                                     <th>Date</th>
                                     <th>Likes</th>
+                                    <th>Comments</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -108,6 +111,8 @@ $list = $postC->getAllPosts();
                             <?php foreach($list as $post){ 
                                 $reactionCount = $reactionC->getReactionCount($post['id'], 'heart');
                                 $reactions = $reactionC->getAllReactionsForPost($post['id'], 'heart');
+                                $commentCount = $commentC->getCommentCount($post['id']);
+                                $comments = $commentC->getCommentsForPost($post['id']);
                             ?>
                                 <tr>
                                     <td><?php echo $post['id']; ?></td>
@@ -118,6 +123,12 @@ $list = $postC->getAllPosts();
                                         <strong><?php echo $reactionCount; ?></strong>
                                         <?php if ($reactionCount > 0) { ?>
                                             <button type="button" class="view-reactions-btn" onclick="toggleReactions('<?php echo $post['id']; ?>')" style="margin-left: 8px; padding: 4px 8px; background: #5865f2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">View</button>
+                                        <?php } ?>
+                                    </td>
+                                    <td>
+                                        <strong><?php echo $commentCount; ?></strong>
+                                        <?php if ($commentCount > 0) { ?>
+                                            <button type="button" class="view-comments-btn" onclick="toggleComments('<?php echo $post['id']; ?>')" style="margin-left: 8px; padding: 4px 8px; background: #5865f2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">View</button>
                                         <?php } ?>
                                     </td>
                                     <td>Active</td>
@@ -132,7 +143,7 @@ $list = $postC->getAllPosts();
                                 </tr>
                                 <?php if ($reactionCount > 0) { ?>
                                 <tr id="reactions-<?php echo $post['id']; ?>" style="display: none; background-color: #f5f5f5;">
-                                    <td colspan="7" style="padding: 15px;">
+                                    <td colspan="8" style="padding: 15px;">
                                         <div style="margin-bottom: 10px;">
                                             <strong>Users who liked this post (<?php echo $reactionCount; ?>):</strong>
                                         </div>
@@ -161,6 +172,43 @@ $list = $postC->getAllPosts();
                                     </td>
                                 </tr>
                                 <?php } ?>
+                                <?php if ($commentCount > 0) { ?>
+                                <tr id="comments-<?php echo $post['id']; ?>" style="display: none; background-color: #f0f8ff;">
+                                    <td colspan="8" style="padding: 15px;">
+                                        <div style="margin-bottom: 10px;">
+                                            <strong>Comments on this post (<?php echo $commentCount; ?>):</strong>
+                                        </div>
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="background-color: #e0e0e0;">
+                                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Username</th>
+                                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Content</th>
+                                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Date</th>
+                                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach($comments as $comment) { ?>
+                                                <tr>
+                                                    <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($comment['username']); ?></td>
+                                                    <td style="padding: 8px; border: 1px solid #ddd;"><?php echo htmlspecialchars($comment['content']); ?></td>
+                                                    <td style="padding: 8px; border: 1px solid #ddd;"><?php echo $comment['created_at']; ?></td>
+                                                    <td style="padding: 8px; border: 1px solid #ddd;">
+                                                        <form method="POST" action="updateComment.php" style="display:inline;">
+                                                            <input type="hidden" name="id" value="<?php echo $comment['id']; ?>">
+                                                            <input type="submit" name="update" value="Update" style="padding: 4px 8px; background: #5865f2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 5px;">
+                                                        </form>
+                                                        <a href="deleteComment.php?id=<?php echo $comment['id']; ?>&post_id=<?php echo $post['id']; ?>" 
+                                                           onclick="return confirm('Are you sure you want to delete this comment?')"
+                                                           style="color: #e0245e; text-decoration: none;">Delete</a>
+                                                    </td>
+                                                </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <?php } ?>
                             <?php } ?>
                             </tbody>
 
@@ -174,6 +222,12 @@ $list = $postC->getAllPosts();
     <script>
         function toggleReactions(postId) {
             const row = document.getElementById('reactions-' + postId);
+            if (row) {
+                row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+            }
+        }
+        function toggleComments(postId) {
+            const row = document.getElementById('comments-' + postId);
             if (row) {
                 row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
             }
