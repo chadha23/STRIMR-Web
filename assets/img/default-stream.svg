@@ -1,0 +1,24 @@
+<svg width="320" height="180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2c2c2c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="320" height="180" fill="url(#bg)"/>
+  
+  <!-- Play icon circle -->
+  <circle cx="160" cy="90" r="30" fill="#9147ff" opacity="0.8"/>
+  
+  <!-- Play icon triangle -->
+  <polygon points="150,75 150,105 175,90" fill="white"/>
+  
+  <!-- Text -->
+  <text x="160" y="140" text-anchor="middle" fill="#888888" font-family="Arial, sans-serif" font-size="14">Stream Preview</text>
+  <text x="160" y="160" text-anchor="middle" fill="#666666" font-family="Arial, sans-serif" font-size="12">No preview available</text>
+  
+  <!-- Border -->
+  <rect x="1" y="1" width="318" height="178" fill="none" stroke="#333333" stroke-width="1"/>
+</svg>

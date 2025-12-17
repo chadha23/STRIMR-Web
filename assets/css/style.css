@@ -1,0 +1,737 @@
+body{background:#0e0e10;color:#efeff1;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;margin:0}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.box{background:#18181b;padding:40px;border-radius:12px;width:380px;margin:80px auto;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+input,button{padding:14px;width:100%;margin:10px 0;border-radius:8px;border:none;font-size:16px}
+input{background:#2c2c2c;color:white}
+button{background:#9147ff;color:white;cursor:pointer}
+button:hover{background:#772ce8}
+.card{background:#18181b;padding:20px;margin:15px;border-radius:12px;display:inline-block;width:280px;vertical-align:top;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-5px);transition:transform 0.2s ease}
+.live{color:#ff0000;font-weight:bold}
+a{color:#9147ff;text-decoration:none;font-weight:bold}
+.obs{background:#18181b;padding:30px;border-radius:12px;margin:30px 0}
+code{background:#000;padding:15px;display:block;border-radius:8px;font-size:15px;margin:15px 0}
+video{width:100%;max-width:1000px;background:#000;border-radius:12px;position:relative}
+.btn{display:inline-block;padding:10px 20px;background:#9147ff;color:white!important;text-decoration:none;border-radius:6px;transition:background 0.2s}
+.btn:hover{background:#772ce8}
+
+/* ===== NOUVELLE INTERFACE CHAT STYLE YOUTUBE/TWITCH ===== */
+
+.chat-section {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    background: #0e0e10;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 0;
+    max-height: calc(100vh - 40px);
+}
+
+/* Header du chat */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #18181b;
+    padding: 12px 16px;
+    border-bottom: 1px solid #333;
+}
+
+.chat-header h4 {
+    color: #efeff1;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#viewer-count-chat {
+    color: #999;
+    font-size: 12px;
+}
+
+/* Container principal du chat */
+.live-chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Feed des messages (scrollable) */
+.chat-messages-feed {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    background: #0e0e10;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    max-height: 400px;
+}
+
+.feed-loading {
+    text-align: center;
+    color: #666;
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+/* Panel d'interaction en bas */
+.chat-interaction-panel {
+    background: #18181b;
+    border-top: 1px solid #333;
+    padding: 8px;
+}
+
+/* Onglets compacts */
+.interaction-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.tab-btn-small {
+    width: 32px;
+    height: 28px;
+    background: #2c2c2c;
+    border: none;
+    border-radius: 4px;
+    color: #efeff1;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tab-btn-small.active {
+    background: #9147ff;
+}
+
+.tab-btn-small:hover:not(.active) {
+    background: #444;
+}
+
+/* Contenu d'interaction */
+.interaction-content {
+    display: none;
+}
+
+.interaction-content.active {
+    display: block;
+}
+
+/* Input chat en bas */
+.chat-input-bottom {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 4px;
+}
+
+.chat-input-bottom input {
+    flex: 1;
+    padding: 10px 14px;
+    background: #2c2c2c;
+    border: 1px solid #444;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    margin: 0;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.chat-input-bottom input:focus {
+    border-color: #9147ff;
+    box-shadow: 0 0 0 2px rgba(145, 71, 255, 0.2);
+}
+
+.chat-input-bottom button {
+    width: 36px;
+    height: 36px;
+    background: #9147ff;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.chat-input-bottom button:hover {
+    background: #772ce8;
+    transform: scale(1.05);
+}
+
+/* Donation compact */
+.donation-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.donation-info {
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+}
+
+.donation-quick-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.donation-quick-row input[type="number"] {
+    width: 50px;
+    padding: 6px 8px;
+    background: #2c2c2c;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: white;
+    font-size: 11px;
+    text-align: center;
+}
+
+.donation-quick-row button {
+    padding: 6px 10px;
+    background: #2c2c2c;
+    border: 1px solid #444;
+    color: #efeff1;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.2s;
+    flex: 1;
+    max-width: 40px;
+    min-width: 35px;
+}
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 10px;
+    transition: all 0.2s;
+    margin: 0;
+}
+
+.donation-quick-row button:hover {
+    background: #9147ff;
+    border-color: #9147ff;
+}
+
+.donation-send-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.donation-send-row input {
+    flex: 1;
+    padding: 6px 10px;
+    background: #2c2c2c;
+    border: 1px solid #444;
+    border-radius: 12px;
+    color: white;
+    font-size: 11px;
+    outline: none;
+}
+
+.donation-send-row input:focus {
+    border-color: #51cf66;
+}
+
+.donation-send-row button {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(45deg, #51cf66, #40c057);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+    transition: all 0.2s;
+    margin: 0;
+}
+
+.donation-send-row button:hover {
+    transform: scale(1.05);
+}
+
+/* Login prompt */
+.chat-login-prompt {
+    background: #18181b;
+    padding: 16px;
+    text-align: center;
+    border-top: 1px solid #333;
+}
+
+.chat-login-prompt p {
+    margin: 0;
+    color: #999;
+    font-size: 12px;
+}
+
+.chat-login-prompt a {
+    color: #9147ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.chat-login-prompt a:hover {
+    text-decoration: underline;
+}
+
+/* Messages dans le feed */
+.chat-message-item {
+    margin-bottom: 4px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    animation: slideIn 0.3s ease;
+    font-family: inherit;
+}
+
+.chat-message-item.chat-type {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid #9147ff;
+}
+
+.chat-message-item.donation-type {
+    background: rgba(81, 207, 102, 0.08);
+    border-left: 3px solid #51cf66;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.message-username {
+    font-weight: 600;
+    color: #9147ff;
+    font-size: 13px;
+}
+
+.message-time {
+    color: #666;
+    font-size: 11px;
+    margin-left: auto;
+}
+
+.message-content {
+    color: #efeff1;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.donation-amount {
+    background: #51cf66;
+    color: white;
+    padding: 1px 4px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar personnalisée */
+.chat-messages-feed::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-messages-feed::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages-feed::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 2px;
+}
+
+.chat-messages-feed::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+/* ===== RESPONSIVE DESIGN COMPLET ===== */
+
+/* Tablettes (768px - 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        padding: 15px;
+        max-width: 100%;
+    }
+    
+    .chat-section {
+        height: 500px;
+    }
+    
+    .donation-quick-row {
+        flex-wrap: wrap;
+    }
+    
+    .donation-quick-row button {
+        min-width: 35px;
+        font-size: 9px;
+        padding: 4px 6px;
+    }
+}
+
+/* Smartphones paysage (576px - 768px) */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .chat-section {
+        height: 450px;
+    }
+    
+    .chat-header {
+        padding: 10px 12px;
+    }
+    
+    .chat-header h4 {
+        font-size: 13px;
+    }
+    
+    .interaction-tabs {
+        justify-content: center;
+    }
+    
+    .tab-btn-small {
+        width: 40px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .chat-input-bottom input {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+    
+    .chat-input-bottom button {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .donation-info {
+        font-size: 12px;
+    }
+    
+    .donation-quick-row input[type="number"] {
+        width: 60px;
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+    
+    .donation-quick-row button {
+        padding: 8px 12px;
+        font-size: 11px;
+        min-width: 40px;
+    }
+    
+    .donation-send-row input {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    
+    .donation-send-row button {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+    
+    .message-content {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    
+    .message-header {
+        font-size: 12px;
+    }
+}
+
+/* Smartphones portrait (320px - 576px) */
+@media (max-width: 576px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .container {
+        padding: 8px;
+    }
+    
+    .chat-header {
+        padding: 8px 12px;
+    }
+    
+    .chat-header h4 {
+        font-size: 13px;
+    }
+    
+    #viewer-count-chat {
+        font-size: 11px;
+    }
+    
+    .chat-input-bottom input {
+        font-size: 16px !important; /* Éviter zoom iOS */
+        padding: 10px 14px !important;
+    }
+    
+    .chat-input-bottom button {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 14px !important;
+    }
+    
+    .donation-compact {
+        gap: 8px;
+    }
+    
+    .donation-info {
+        font-size: 11px;
+    }
+    
+    .donation-quick-row {
+        gap: 6px;
+    }
+    
+    .donation-quick-row input[type="number"] {
+        width: 55px;
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+    
+    .donation-quick-row button {
+        padding: 6px 10px;
+        font-size: 10px;
+        min-width: 35px;
+    }
+    
+    .donation-send-row {
+        gap: 8px;
+    }
+    
+    .donation-send-row input {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+    
+    .donation-send-row button {
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
+    }
+    
+    .chat-message-item {
+        padding: 4px 6px;
+        margin-bottom: 4px;
+    }
+    
+    .message-header {
+        font-size: 11px;
+        gap: 4px;
+    }
+    
+    .message-content {
+        font-size: 12px;
+        line-height: 1.3;
+    }
+    
+    .message-time {
+        font-size: 9px;
+    }
+    
+    .donation-amount {
+        font-size: 9px;
+        padding: 1px 3px;
+    }
+    
+    .chat-login-prompt {
+        padding: 12px;
+    }
+    
+    .chat-login-prompt p {
+        font-size: 11px;
+    }
+}
+
+/* Très petits écrans (< 320px) */
+@media (max-width: 320px) {
+    .chat-section {
+        height: 350px;
+    }
+    
+    .donation-quick-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .donation-quick-row button {
+        width: 100%;
+        margin-bottom: 2px;
+    }
+    
+    .donation-quick-row input[type="number"] {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+}
+
+/* Amélioration pour les écrans tactiles */
+@media (hover: none) and (pointer: coarse) {
+    .chat-input-bottom button,
+    .donation-send-row button,
+    .tab-btn-small,
+    .donation-quick-row button {
+        min-height: 44px; /* Apple recommande 44px minimum */
+    }
+    
+    .chat-input-bottom input,
+    .donation-send-row input,
+    .donation-quick-row input[type="number"] {
+        min-height: 40px;
+        font-size: 16px; /* Évite le zoom sur iOS */
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .donation-row {
+        flex-wrap: wrap;
+    }
+    
+    .quick-amount-inline {
+        font-size: 10px;
+        padding: 5px 8px;
+        min-width: 40px;
+    }
+    
+    .donation-input-inline {
+        width: 70px;
+    }
+    
+    .tab-btn {
+        font-size: 11px;
+        padding: 8px;
+    }
+    
+    .unified-feed {
+        height: 400px;
+    }
+}
+
+/* ===== OVERLAY STREAM OFFLINE ===== */
+
+.stream-offline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.offline-content {
+    background: #18181b;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 400px;
+    border: 2px solid #333;
+}
+
+.offline-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.offline-title {
+    color: #efeff1;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.offline-message {
+    color: #999;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.back-to-dashboard {
+    display: inline-block;
+    background: #9147ff;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.back-to-dashboard:hover {
+    background: #772ce8;
+    transform: translateY(-1px);
+}
+
+/* Style pour message stream hors ligne */
+.stream-offline-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 40px 20px;
+    text-align: center;
+    color: #999;
+}
+
+.stream-offline-message .offline-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.7;
+}
+
+.stream-offline-message h3 {
+    color: #efeff1;
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.stream-offline-message p {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
