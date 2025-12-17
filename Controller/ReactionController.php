@@ -4,6 +4,7 @@ require_once __DIR__ . "/../Model/Reacion Class";
 
 class ReactionController {
     
+    // Generate unique ID for varchar(100) IDs
     private function generateId($prefix = 'reaction') {
         return $prefix . '_' . time() . '_' . bin2hex(random_bytes(12));
     }
@@ -12,6 +13,7 @@ class ReactionController {
     public function toggleReaction($post_id, $user_id, $type = 'heart') {
         $db = Config::getConnexion();
         try {
+            // Check if reaction already exists
             $checkSql = "SELECT id FROM Reactions WHERE post_id = :post_id AND user_id = :user_id AND type = :type";
             $checkQuery = $db->prepare($checkSql);
             $checkQuery->execute([
@@ -23,11 +25,13 @@ class ReactionController {
             $existing = $checkQuery->fetch();
             
             if ($existing) {
+                // Remove reaction
                 $deleteSql = "DELETE FROM Reactions WHERE id = :id";
                 $deleteQuery = $db->prepare($deleteSql);
                 $deleteQuery->execute(['id' => $existing['id']]);
                 return ['action' => 'removed', 'count' => $this->getReactionCount($post_id, $type)];
             } else {
+                // Add reaction
                 $reactionId = $this->generateId('reaction');
                 $insertSql = "INSERT INTO Reactions (id, post_id, user_id, type, created_at) 
                              VALUES (:id, :post_id, :user_id, :type, NOW())";
@@ -46,6 +50,7 @@ class ReactionController {
         }
     }
     
+    // Get reaction count for a post
     public function getReactionCount($post_id, $type = 'heart') {
         $sql = "SELECT COUNT(*) as count FROM Reactions WHERE post_id = :post_id AND type = :type";
         $db = Config::getConnexion();
@@ -63,6 +68,7 @@ class ReactionController {
         }
     }
     
+    // Check if user has reacted to a post
     public function hasUserReacted($post_id, $user_id, $type = 'heart') {
         $sql = "SELECT id FROM Reactions WHERE post_id = :post_id AND user_id = :user_id AND type = :type";
         $db = Config::getConnexion();
@@ -80,6 +86,7 @@ class ReactionController {
         }
     }
     
+    // Get all reactions for a post with user information (for back office)
     public function getAllReactionsForPost($post_id, $type = 'heart') {
         $sql = "SELECT 
                     Reactions.id,
@@ -107,6 +114,7 @@ class ReactionController {
         }
     }
     
+    // Delete a reaction (for back office)
     public function deleteReaction($id) {
         $sql = "DELETE FROM Reactions WHERE id = :id";
         $db = Config::getConnexion();
