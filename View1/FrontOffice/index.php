@@ -1,29 +1,52 @@
+<?php
+require_once __DIR__ . "/../../controllers/ServerController.php";
+require_once __DIR__ . "/../../models/Server.php";
+require_once __DIR__ . "/../../controllers/MessageController.php";
+require_once __DIR__ . "/../../models/Message.php";
+
+$serverC = new ServerController();
+$servers = $serverC->listServers();
+
+$messageC = new MessageController();
+
+// Envoi d'un message
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_content'], $_POST['server_id'])) {
+    $content = trim($_POST['message_content']);
+    $server_id = (int)$_POST['server_id'];
+
+    if ($content !== '') {
+        $message = new Message(null, $server_id, $content);
+        $messageC->addMessage($message);
+        header("Location: " . $_SERVER['PHP_SELF'] . "?server=" . $server_id);
+        exit();
+    }
+}
+
+// Récupérer le serveur actif
+$active_server_id = isset($_GET['server']) ? (int)$_GET['server'] : ($servers[0]['id'] ?? 0);
+$messages = $messageC->getMessagesByServer($active_server_id);
+
+// Trouver le nom du serveur actif
+$active_server_name = "Server Name";
+foreach ($servers as $srv) {
+    if ($srv['id'] == $active_server_id) {
+        $active_server_name = htmlspecialchars($srv['name']);
+        break;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ============================================
-         HEAD SECTION
-         Lines 1-10
-         ============================================ -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord Clone - Simple Template</title>
-    
-    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- ============================================
-         TOP NAVIGATION BAR
-         Lines 11-30
-         Fixed navigation at the top with 3 buttons:
-         - Servers (Discord-style chat)
-         - Stream (Twitch-style streaming)
-         - Feed (Twitter-style feed)
-         ============================================ -->
     <nav class="top-nav">
         <div class="nav-container">
-            <!-- Servers Button - Opens Discord-style chat page -->
             <div class="nav-item active" onclick="showPage('servers', this)">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -33,8 +56,6 @@
                 </div>
                 <div class="nav-label">Servers</div>
             </div>
-            
-            <!-- Stream Button - Opens Twitch-style streaming page -->
             <div class="nav-item" onclick="showPage('stream', this)">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -44,8 +65,6 @@
                 </div>
                 <div class="nav-label">Stream</div>
             </div>
-
-            <!-- Marketplace Button - Opens Facebook-style marketplace page -->
             <div class="nav-item" onclick="showPage('marketplace', this)">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -57,8 +76,6 @@
                 </div>
                 <div class="nav-label">Marketplace</div>
             </div>
-            
-            <!-- Feed Button - Opens Twitter-style feed page -->
             <div class="nav-item" onclick="showPage('feed', this)">
                 <div class="nav-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -71,163 +88,96 @@
         </div>
     </nav>
 
-    <!-- ============================================
-         MAIN CONTENT AREA
-         Lines 31-200
-         Container for all pages (servers, stream, feed)
-         Only one page is visible at a time
-         ============================================ -->
     <div class="main-wrapper">
-        
-        <!-- ============================================
-             SERVERS PAGE (Discord-style)
-             Lines 35-120
-             Three-column layout: servers sidebar, channels sidebar, chat area
-             ============================================ -->
         <div id="servers-page" class="page active">
             <div class="servers-page">
-                
-                <!-- Servers Sidebar (Left) - List of server icons -->
+
+                <!-- === SIDEBAR SERVEURS (gauche) === -->
                 <div class="servers-sidebar">
-                    <!-- Home Server Icon -->
-                    <div class="server-icon home active" onclick="chooseServer('home', this)" title="Home">
+                    <div class="server-icon home active" title="Home">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                   d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6h-4v6H5a1 1 0 01-1-1z"/>
                         </svg>
                     </div>
                     <div class="divider"></div>
-                    
-                    <!-- General Server Icon -->
-                    <div class="server-icon green" onclick="chooseServer('general', this)" title="General">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                  d="M7 8h10M7 12h6m10-1a9 9 0 11-4.5-7.8l3.6-1.2a1 1 0 011.3 1.1l-.6 3A8.9 8.9 0 0123 11z"/>
-                        </svg>
-                    </div>
-                    
-                    <!-- Gaming Server Icon -->
-                    <div class="server-icon purple" onclick="chooseServer('gaming', this)" title="Gaming">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                  d="M6.5 8h11a3.5 3.5 0 013.5 3.5V14a4 4 0 01-4 4h-1.1l-.9 1a2 2 0 01-3 0l-.9-1H8a4 4 0 01-4-4v-2.5A3.5 3.5 0 016.5 8z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                  d="M8.5 12h-3m1.5-1.5v3M17.75 12.75h.01M20 10h.01"/>
-                        </svg>
-                    </div>
-                    
-                    <!-- Music Server Icon -->
-                    <div class="server-icon pink" onclick="chooseServer('music', this)" title="Music">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                  d="M9 18a3 3 0 11-2-2.82V6.5a1 1 0 01.79-.98l10-2.2A1 1 0 0119 4.3V14a3 3 0 11-2-2.83V7.2l-8 1.76V18z"/>
-                        </svg>
-                    </div>
-                    
-                    <!-- Coding Server Icon -->
-                    <div class="server-icon" style="background-color: #faa61a;" onclick="chooseServer('coding', this)" title="Coding">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <rect x="3" y="5" width="18" height="12" rx="2" ry="2" stroke-width="1.8"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                  d="M2 17h20M9 21h6"/>
-                        </svg>
-                    </div>
+
+                    <!-- SERVEURS DYNAMIQUES -->
+                    <?php foreach ($servers as $srv): ?>
+                        <div class="server-icon <?= $srv['id'] == $active_server_id ? 'active' : '' ?>"
+                             title="<?= htmlspecialchars($srv['name']) ?>"
+                             onclick="window.location='?server=<?= $srv['id'] ?>'">
+                            <span><?= strtoupper(substr($srv['name'], 0, 2)) ?></span>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
-                <!-- Channels Sidebar (Middle) - List of channels for selected server -->
+                <!-- === SIDEBAR SALONS (milieu) === -->
                 <div class="channels-sidebar">
-                    <!-- Server Name Header -->
                     <div class="channels-header">
-                        <h2 id="server-name">Server Name</h2>
+                        <h2 id="server-name"><?= $active_server_name ?></h2>
                     </div>
-                    
-                    <!-- Channels List -->
+
                     <div class="channels-list">
                         <div class="channel-section">
                             <div class="channel-section-title">Text Channels</div>
-                            
-                            <!-- General Channel -->
-                            <div class="channel-item active" onclick="chooseChannel('general', this)"><span>general</span></div>
-                            
-                            <!-- Announcements Channel -->
-                            <div class="channel-item" onclick="chooseChannel('announcements', this)"><span>announcements</span></div>
-                            
-                            <!-- Random Channel -->
-                            <div class="channel-item" onclick="chooseChannel('random', this)"><span>random</span></div>
+                            <div class="channel-item active"><span># general</span></div>
+                            <div class="channel-item"><span># announcements</span></div>
+                            <div class="channel-item"><span># random</span></div>
                         </div>
                     </div>
-                    
-                    <!-- User Info Footer -->
+
                     <div class="user-info">
-                        <div class="user-avatar" id="user-avatar">U</div>
+                        <div class="user-avatar">U</div>
                         <div class="user-details">
-                            <div class="user-name" id="user-name">Username</div>
-                            <div class="user-id" id="user-id">#1234</div>
+                            <div class="user-name">Username</div>
+                            <div class="user-id">#1234</div>
                         </div>
-                        <button class="logout-btn" onclick="logOutUser()" title="Logout" style="background: none; border: none; color: #8e9297; cursor: pointer; padding: 4px; border-radius: 4px; transition: all 0.2s;">
-                            🚪
-                        </button>
                     </div>
                 </div>
 
-                <!-- Chat Area (Right) - Messages display and input -->
+                <!-- === ZONE CHAT (droite) === -->
                 <div class="chat-area">
-                    <!-- Channel Header -->
                     <div class="content-header">
-                        <h2 id="channel-name">general</h2>
+                        <h2># general</h2>
                     </div>
-                    
-                    <!-- Messages Container - Messages are inserted here by JavaScript -->
+
                     <div class="content-body">
                         <div class="messages-container" id="messages-container">
-                            <!-- Messages will be inserted here by JavaScript (see script.js renderMessages function) -->
+                            <?php foreach ($messages as $msg): ?>
+                                <div class="message">
+                                    <div class="message-avatar">U</div>
+                                    <div class="message-info">
+                                        <div class="message-user">User<?= $msg['id'] ?></div>
+                                        <div class="message-content"><?= htmlspecialchars($msg['content']) ?></div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                    
-                    <!-- Message Input Area -->
+
+                    <!-- Formulaire d'envoi -->
                     <div class="input-area">
                         <div class="input-container">
-                            <!-- Add Attachment Button -->
-                            <button class="input-btn" type="button" aria-label="Add attachment">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                          d="M12 5v14m7-7H5"/>
-                                </svg>
-                            </button>
-                            
-                            <!-- Message Input Field -->
-                            <input 
-                                type="text" 
-                                class="input-field" 
-                                id="message-input"
-                                placeholder="Message #general"
-                                onkeypress="messageFieldKeyPress(event)"
-                            />
-                            
-                            <!-- Attachment Button -->
-                            <button class="input-btn" type="button" aria-label="Upload file">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                          d="M18.364 5.636a4 4 0 010 5.657l-7.071 7.071a4 4 0 01-5.657-5.657l7.07-7.071a2.5 2.5 0 013.536 3.536l-6.364 6.364"/>
-                                </svg>
-                            </button>
-                            
-                            <!-- Emoji Button -->
-                            <button class="input-btn" type="button" aria-label="Add emoji">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <circle cx="12" cy="12" r="9" stroke-width="1.8"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-                                          d="M8 15s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
-                                </svg>
-                            </button>
-                            
-                            <!-- Send Button -->
-                            <button class="send-btn" onclick="submitMessage()">Send</button>
+                            <form method="POST" style="display:flex; width:100%; gap:8px;">
+                                <input type="hidden" name="server_id" value="<?= $active_server_id ?>">
+                                <input type="text" name="message_content" class="input-field" placeholder="Message #general" required autocomplete="off">
+                                <button type="submit" class="send-btn">Send</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Les autres pages (stream, marketplace, feed) restent 100% identiques -->
+        <!-- ... (tu les gardes exactement comme dans ton template d'origine) ... -->
+
+    </div>
+
+    <script src="../controllers/script.js"></script>
+</body>
+</html>
 
         <!-- ============================================
              STREAM PAGE (Twitch-style)
