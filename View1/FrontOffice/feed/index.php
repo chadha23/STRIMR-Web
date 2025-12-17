@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 
 require_once __DIR__ . '/../../../Controller/PostController.php';
 require_once __DIR__ . '/../../../Controller/ReactionController.php';
+require_once __DIR__ . '/../../../Controller/CommentController.php';
 require_once __DIR__ . '/../../../Model/Classes User.php';
 require_once __DIR__ . '/../../../Model/Comment Class';
 require_once __DIR__ . '/../../../Model/Reacion Class';
@@ -11,6 +12,7 @@ require_once __DIR__ . '/../../../Model/Reacion Class';
 
 $postC = new PostController();
 $reactionC = new ReactionController();
+$commentC = new CommentController();
 
 $authorId = '1'; // User ID from database (varchar)
 
@@ -36,6 +38,28 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         $post_id = $_POST['post_id'];
         $user_id = $_POST['user_id'];
         $reactionC->toggleReaction($post_id, $user_id, 'heart');
+        // Redirect to prevent form resubmission
+        header('Location: index.php');
+        exit();
+    }
+
+    if(isset($_POST['add_comment']) && isset($_POST['post_id']) && !empty($_POST['comment_content'])){
+        $post_id = $_POST['post_id'];
+        $commentC->addComment($post_id, $authorId, $_POST['comment_content']);
+        header('Location: index.php');
+        exit();
+    }
+
+    if(isset($_POST['update_comment']) && isset($_POST['comment_id']) && !empty($_POST['comment_content'])){
+        $comment_id = $_POST['comment_id'];
+        $commentC->updateComment($comment_id, $authorId, $_POST['comment_content']);
+        header('Location: index.php');
+        exit();
+    }
+
+    if(isset($_POST['delete_comment']) && isset($_POST['comment_id'])){
+        $comment_id = $_POST['comment_id'];
+        $commentC->deleteComment($comment_id, $authorId);
         header('Location: index.php');
         exit();
     }
@@ -66,6 +90,35 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
         }
         .heart-btn:hover {
             color: #e0245e;
+        }
+        .feed-sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+        .sidebar-card a:hover {
+            background: #4752c4 !important;
+        }
+        .comment-section {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+        .comment-section.active {
+            display: block;
+        }
+        .post-action.reply {
+            cursor: pointer;
+        }
+        .post-action.reply:hover {
+            color: #5865f2;
+        }
+        @media (max-width: 1024px) {
+            .feed-sidebar {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -133,9 +186,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     <main class="main-wrapper">
         <section id="feed-page" class="page active" data-template-section="feed">
             <div class="feed-page">
-                <div class="feed-container">
+                <div style="display: flex; gap: 20px; max-width: 1200px; margin: 0 auto;">
+                    <div class="feed-container" style="flex: 1;">
                     <!-- Compose Box - Create new post -->
-                    <form method="POST">
+                    <form method="POST" onsubmit="return validatePostForm()">
 
                         <div class="compose-box">
                             <div class="compose-header">
@@ -144,10 +198,10 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                                 <div style="flex: 1;">
                                     <textarea 
                                         class="compose-input"
+                                        id="post-content"
                                         name="content"
                                         placeholder="What's happening?"
                                         rows="4"
-                                        required
                                     ></textarea>
                                 </div>
                             </div>
@@ -194,6 +248,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                         <?php foreach($list as $post){ 
                             $reactionCount = $reactionC->getReactionCount($post['id'], 'heart');
                             $hasReacted = $reactionC->hasUserReacted($post['id'], $authorId, 'heart');
+                            $commentCount = $commentC->getCommentCount($post['id']);
+                            $comments = $commentC->getCommentsForPost($post['id']);
                         ?>
                             <article class="post" data-template-item="post">
                                 <header class="post-header">
@@ -207,12 +263,12 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                                     <?php echo $post['content']; ?>
                                 </div>
                                 <div class="post-actions">
-                                    <button class="post-action reply" type="button">
+                                    <button class="post-action reply" type="button" onclick="toggleCommentSection('<?php echo $post['id']; ?>')">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                                 d="M10 9V5a7 7 0 017 7h3l-4 4-4-4h3a4 4 0 00-4-4z"/>
                                         </svg>
-                                        <span>0</span>
+                                        <span><?php echo $commentCount; ?></span>
                                     </button>
                                     <button class="post-action retweet" type="button">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -260,13 +316,103 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
                                            onclick="return confirm('Are you sure you want to delete this post?')">Delete</a>
                                     </div>
                                 </div>
+                                <div class="comment-section" id="comment-section-<?php echo $post['id']; ?>">
+                                    <form method="POST" style="margin-bottom: 12px;" onsubmit="return validateCommentForm('<?php echo $post['id']; ?>')">
+                                        <input type="hidden" name="add_comment" value="1">
+                                        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                                        <textarea id="comment-content-<?php echo $post['id']; ?>" name="comment_content" rows="2" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff;" placeholder="Add a comment..."></textarea>
+                                        <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                                            <button type="submit" class="action-btn btn-edit" style="padding: 6px 12px;">Comment</button>
+                                        </div>
+                                    </form>
+                                    <?php if(count($comments) > 0){ ?>
+                                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                                            <?php foreach($comments as $comment){ ?>
+                                                <div class="comment" style="padding: 10px; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 8px;">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                        <div>
+                                                            <strong><?php echo htmlspecialchars($comment['username']); ?></strong>
+                                                            <span style="color: #a0a0a0; font-size: 12px;"> · <?php echo $comment['created_at']; ?></span>
+                                                        </div>
+                                                    </div>
+                                                    <p style="margin: 6px 0; color: #e5e5e5;"><?php echo htmlspecialchars($comment['content']); ?></p>
+                                                    <?php if($comment['user_id'] === $authorId){ ?>
+                                                        <form method="POST" style="display: flex; gap: 8px; align-items: center; margin-top: 6px;" onsubmit="return validateUpdateCommentForm('<?php echo $comment['id']; ?>')">
+                                                            <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
+                                                            <input type="hidden" name="update_comment" value="1">
+                                                            <input type="text" id="update-comment-<?php echo $comment['id']; ?>" name="comment_content" value="<?php echo htmlspecialchars($comment['content']); ?>" style="flex: 1; padding: 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff;">
+                                                            <button type="submit" class="action-btn btn-edit">Update</button>
+                                                        </form>
+                                                        <form method="POST" style="margin-top: 6px;">
+                                                            <input type="hidden" name="comment_id" value="<?php echo $comment['id']; ?>">
+                                                            <input type="hidden" name="delete_comment" value="1">
+                                                            <button type="submit" class="action-btn btn-delete" onclick="return confirm('Delete this comment?')">Delete</button>
+                                                        </form>
+                                                    <?php } ?>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                    <?php } ?>
+                                </div>
                             </article>
                         <?php } ?>
+                    </div>
+                    </div>
+                    
+                    <!-- Right Panel -->
+                    <div class="feed-sidebar" style="width: 280px; flex-shrink: 0;">
+                        <div class="sidebar-card" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 20px; backdrop-filter: blur(10px); margin-bottom: 20px;">
+                            <h3 style="color: #ffffff; font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                                <span>📊</span>
+                                Analytics
+                            </h3>
+                            <p style="color: #a0a0a0; font-size: 14px; margin-bottom: 16px; line-height: 1.5;">
+                                Get AI-powered insights about your posts, likes, and engagement patterns.
+                            </p>
+                            <a href="statistics.php" style="display: block; padding: 12px 20px; background: #5865f2; color: white; text-align: center; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.2s;">
+                                View Statistics
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+    <script>
+        function toggleCommentSection(postId) {
+            const commentSection = document.getElementById('comment-section-' + postId);
+            if (commentSection) {
+                commentSection.classList.toggle('active');
+            }
+        }
+        
+        function validatePostForm() {
+            const content = document.getElementById('post-content').value.trim();
+            if (content === '') {
+                alert('Please fill in the content field');
+                return false;
+            }
+            return true;
+        }
+        
+        function validateCommentForm(postId) {
+            const content = document.getElementById('comment-content-' + postId).value.trim();
+            if (content === '') {
+                alert('Please fill in the comment field');
+                return false;
+            }
+            return true;
+        }
+        
+        function validateUpdateCommentForm(commentId) {
+            const content = document.getElementById('update-comment-' + commentId).value.trim();
+            if (content === '') {
+                alert('Please fill in the comment field');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
 
