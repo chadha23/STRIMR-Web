@@ -1,7 +1,7 @@
 <?php
 /**
- * Module Chadha - Integration prototype for STRIMR
- * User Authentication and Management System
+ * Module Chadha - Complete Integration for STRIMR Platform
+ * Full application structure: Users, Servers, Streams, Feed
  */
 
 // Include database configuration
@@ -11,29 +11,51 @@ class ChadhaUserModule {
     private $db;
     
     public function __construct() {
-        $this->db = new PDO("mysql:host=localhost;dbname=strimr", "root", "");
-        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        global $conn;
+        $this->db = $conn;
     }
     
     /**
-     * Authenticate user for streaming platform
+     * Authenticate user for complete platform
      */
     public function authenticate($email, $password) {
         include 'login.php';
     }
     
     /**
-     * Register new streamer
+     * Register new user for complete platform
      */
     public function registerUser($userData) {
         include 'signup.php';
     }
     
     /**
-     * Get user profile for streaming dashboard
+     * Get user profile for dashboard
      */
     public function getUserProfile($userId) {
-        include 'users.php';
+        include 'get_profile.php';
+    }
+    
+    /**
+     * Update user profile
+     */
+    public function updateProfile($userId, $data) {
+        include 'update_profile.php';
+    }
+    
+    /**
+     * Admin functions
+     */
+    public function adminDashboard() {
+        include 'admin.php';
+    }
+    
+    /**
+     * Display complete application interface
+     * Includes: Servers (Discord-style), Stream (Twitch-style), Feed (Twitter-style)
+     */
+    public function showCompleteApp() {
+        include 'index_view.php';
     }
     
     /**
@@ -49,25 +71,50 @@ class ChadhaUserModule {
     public function showProfile($userId) {
         include 'profile_view.php';
     }
+    
+    /**
+     * Display admin interface
+     */
+    public function showAdmin() {
+        include 'admin_view.php';
+    }
 }
 
 // Integration with main STRIMR system
 function integrateChadhaAuth() {
-    $userModule = new ChadhaUserModule();
-    
-    // Check if user is logged in for streaming
+    // Check if user is logged in
     if (isset($_SESSION['user_id'])) {
-        return $userModule->getUserProfile($_SESSION['user_id']);
+        $userModule = new ChadhaUserModule();
+        return [
+            'id' => $_SESSION['user_id'],
+            'username' => $_SESSION['username'] ?? 'User',
+            'email' => $_SESSION['email'] ?? '',
+            'is_admin' => $_SESSION['is_admin'] ?? false
+        ];
     }
     
     return false;
 }
 
-// Hook into existing user system
-if (!function_exists('authenticateForStream')) {
-    function authenticateForStream($email, $password) {
+// Main authentication function for the complete platform
+if (!function_exists('authenticateForPlatform')) {
+    function authenticateForPlatform($email, $password) {
         $chadha = new ChadhaUserModule();
         return $chadha->authenticate($email, $password);
     }
+}
+
+// Initialize CSS and JS assets paths
+function getChadhaAssets() {
+    return [
+        'css' => [
+            '/STRIMR/STRIMR-Web/assets/css/chadha.css',
+            '/STRIMR/STRIMR-Web/modules/chadha/styles.css'
+        ],
+        'js' => [
+            '/STRIMR/STRIMR-Web/assets/js/chadha.js', 
+            '/STRIMR/STRIMR-Web/modules/chadha/script.js'
+        ]
+    ];
 }
 ?>
