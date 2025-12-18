@@ -2,6 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Authentication check
+require_once __DIR__ . '/../includes/auth_check.php';
+
 require_once __DIR__ . '/../../../Controller/ServerController.php';
 require_once __DIR__ . '/../../../Controller/MessageController.php';
 require_once __DIR__ . '/../../../Controller/AIController.php';
@@ -206,6 +209,9 @@ if (!$isAIServer && !empty($servers)) {
     </style>
 </head>
 <body>
+    <!-- Profile Component -->
+    <?php require_once __DIR__ . '/../includes/profile_component.php'; ?>
+    
     <nav class="top-nav" aria-label="Primary navigation">
         <div class="nav-container">
             <a class="nav-item active" id="servers-nav" href="../servers/index.php" data-page-target="servers-page">
@@ -306,13 +312,6 @@ if (!$isAIServer && !empty($servers)) {
                             <button class="channel-item active" type="button" aria-pressed="true">
                                 <span><?php echo $isAIServer ? 'chat-with-ai' : 'general'; ?></span>
                             </button>
-                        </div>
-                    </div>
-                    <div class="user-info">
-                        <div class="user-avatar">U</div>
-                        <div class="user-details">
-                            <div class="user-name">Username</div>
-                            <div class="user-id">#1234</div>
                         </div>
                     </div>
                 </div>
