@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . '/../model/db.php';
+require_once __DIR__ . '/../model/User.php';
 
 $raw = file_get_contents('php://input');
 $payload = json_decode($raw, true);
@@ -26,52 +26,16 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 try {
-    // Check for duplicates (other users with same email or username)
-    $checkSql = "SELECT id FROM users WHERE (email = :email OR username = :username) AND id <> :id LIMIT 1";
-    $check = $conn->prepare($checkSql);
-    $check->execute([
-        ':email' => $email,
-        ':username' => $username,
-        ':id' => $id
-    ]);
-    $result = $check->fetch();
+    $userModel = new User($conn);
+    $result = $userModel->updateProfile($id, $username, $full_name, $email);
 
-    if ($result) {
-        echo json_encode(['success' => false, 'error' => 'Email or username already used by another account']);
-        exit();
-    }
-
-    // Ensure full_name column exists (like in signup.php)
-    $hasFullName = false;
-    $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-    if ($columnCheck && $columnCheck->fetch()) {
-        $hasFullName = true;
-    } else {
-        $conn->exec("ALTER TABLE users ADD COLUMN full_name VARCHAR(100) NULL AFTER username");
-        $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-        if ($columnCheck && $columnCheck->fetch()) {
-            $hasFullName = true;
+    if (!$result['success']) {
+        if (($result['error'] ?? '') === 'duplicate') {
+            echo json_encode(['success' => false, 'error' => 'Email or username already used by another account']);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Failed to update profile']);
         }
-    }
-
-    // Update query
-    if ($hasFullName) {
-        $sql = "UPDATE users SET username = :username, full_name = :full_name, email = :email WHERE id = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            ':username' => $username,
-            ':full_name' => $full_name,
-            ':email' => $email,
-            ':id' => $id
-        ]);
-    } else {
-        $sql = "UPDATE users SET username = :username, email = :email WHERE id = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            ':username' => $username,
-            ':email' => $email,
-            ':id' => $id
-        ]);
+        exit();
     }
 
     echo json_encode(['success' => true]);

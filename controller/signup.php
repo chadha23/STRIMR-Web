@@ -33,29 +33,12 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-require_once __DIR__ . '/../model/db.php';
+require_once __DIR__ . '/../model/User.php';
 
 try {
-    // Ensure the users table has a full_name column (ignore errors if it already exists)
-    $hasFullName = false;
-    $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-    if ($columnCheck && $columnCheck->fetch()) {
-        $hasFullName = true;
-    } else {
-        $conn->exec("ALTER TABLE users ADD COLUMN full_name VARCHAR(100) NULL AFTER username");
-        $columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'full_name'");
-        if ($columnCheck && $columnCheck->fetch()) {
-            $hasFullName = true;
-        }
-    }
+    $userModel = new User($conn);
 
-    // Check for duplicates
-    $check = $conn->prepare("SELECT id, is_verified FROM users WHERE email = :email OR username = :username LIMIT 1");
-    $check->execute([
-        ':email' => $email,
-        ':username' => $username
-    ]);
-    $checkResult = $check->fetch();
+    $checkResult = $userModel->emailExistsOrUsernameExists($email, $username);
 
     if ($checkResult) {
         $isVerified = isset($checkResult['is_verified']) ? (int)$checkResult['is_verified'] : 0;
@@ -81,28 +64,18 @@ try {
 
     $isAdmin = ($username === 'admin');
     $verificationToken = $isAdmin ? null : bin2hex(random_bytes(32));
+    $verificationExpires = $isAdmin ? null : date('Y-m-d H:i:s', strtotime('+1 day'));
     $isVerifiedValue = $isAdmin ? 1 : 0;
 
-    if ($hasFullName) {
-        $stmt = $conn->prepare("INSERT INTO users (username, full_name, email, password, is_verified, verification_token, created_at) VALUES (:username, :full_name, :email, :password, :is_verified, :verification_token, NOW())");
-        $stmt->execute([
-            ':username' => $username,
-            ':full_name' => $fullName,
-            ':email' => $email,
-            ':password' => $passwordHash,
-            ':is_verified' => $isVerifiedValue,
-            ':verification_token' => $verificationToken
-        ]);
-    } else {
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password, is_verified, verification_token, created_at) VALUES (:username, :email, :password, :is_verified, :verification_token, NOW())");
-        $stmt->execute([
-            ':username' => $username,
-            ':email' => $email,
-            ':password' => $passwordHash,
-            ':is_verified' => $isVerifiedValue,
-            ':verification_token' => $verificationToken
-        ]);
-    }
+    $userModel->createUser(
+        $username,
+        $fullName,
+        $email,
+        $passwordHash,
+        $verificationToken,
+        $verificationExpires,
+        $isVerifiedValue
+    );
 
     if (!$isAdmin) {
         require_once __DIR__ . '/../core/Mailer.php';

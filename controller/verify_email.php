@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../model/db.php';
+require_once __DIR__ . '/../model/User.php';
 
 $token = $_GET['token'] ?? null;
 if (!$token) {
@@ -7,19 +7,13 @@ if (!$token) {
     exit;
 }
 
-$stmt = $conn->prepare('SELECT id FROM users WHERE verification_token = :token LIMIT 1');
-$stmt->bindParam(':token', $token, PDO::PARAM_STR);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$userModel = new User($conn);
+$verified = $userModel->verifyEmailByToken($token);
 
-if (!$user) {
+if (!$verified) {
     echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invalid token</title></head><body><p>Invalid or expired token</p></body></html>';
     exit;
 }
-
-$update = $conn->prepare('UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = :id');
-$update->bindParam(':id', $user['id'], PDO::PARAM_INT);
-$update->execute();
 
 ?>
 <!DOCTYPE html>
