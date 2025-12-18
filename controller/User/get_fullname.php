@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . '/../model/db.php';
+require_once __DIR__ . '/../../model/db.php';
 
 if (!isset($_GET['id'])) {
     echo json_encode(['success' => false, 'error' => 'Missing id']);

@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once __DIR__ . '/../model/User.php';
+require_once __DIR__ . '/../../model/User.php';
 
 $userModel = new User($conn);
 $fetchedUsers = $userModel->lastRegisteredUsers(0);

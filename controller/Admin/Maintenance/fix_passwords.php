@@ -1,6 +1,6 @@
 <?php
 // Fix password hashes for all users - set all to '123'
-require_once __DIR__ . '/../model/db.php';
+require_once __DIR__ . '/../../../model/db.php';
 
 $newPassword = '123';
 

@@ -15,4 +15,4 @@ if (empty($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
 }
 
 // Ici l'utilisateur est admin -> on sert la vue PHP
-include __DIR__ . '/../view/admin.php';
+include __DIR__ . '/../../view/BackOffice/Admin/admin.php';

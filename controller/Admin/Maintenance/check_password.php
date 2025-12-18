@@ -1,6 +1,6 @@
 <?php
 // Check password hashes for all current users
-require_once __DIR__ . '/../model/db.php';
+require_once __DIR__ . '/../../../model/db.php';
 
 try {
     $stmt = $conn->query("SELECT id, username, password, email FROM users ORDER BY username");

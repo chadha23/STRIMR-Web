@@ -33,7 +33,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-require_once __DIR__ . '/../model/User.php';
+require_once __DIR__ . '/../../model/User.php';
 
 try {
     $userModel = new User($conn);
@@ -78,7 +78,7 @@ try {
     );
 
     if (!$isAdmin) {
-        require_once __DIR__ . '/../core/Mailer.php';
+        require_once __DIR__ . '/../../core/Mailer.php';
         $fullNameOrUsername = $fullName !== '' ? $fullName : $username;
 
         $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

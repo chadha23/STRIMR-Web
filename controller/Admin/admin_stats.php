@@ -2,7 +2,7 @@
 // admin_stats.php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../model/User.php';
+require_once __DIR__ . '/../../model/User.php';
 
 $totalUsers   = 0;
 $recentUsers  = [];

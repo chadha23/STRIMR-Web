@@ -1,4 +1,28 @@
 RewriteEngine On
 
+# Map legacy flat view URLs to their relocated counterparts
+RewriteRule ^view/login\.php$ view/FrontOffice/Auth/login.php [L]
+RewriteRule ^view/clear_login\.php$ view/FrontOffice/Auth/clear_login.php [L]
+RewriteRule ^view/index\.php$ view/FrontOffice/Home/index.php [L]
+RewriteRule ^view/profile\.php$ view/FrontOffice/Profile/profile.php [L]
+RewriteRule ^view/admin\.php$ view/BackOffice/Admin/admin.php [L]
+
+# Map legacy flat controller URLs to their organized versions
+RewriteRule ^controller/login\.php$ controller/Auth/login.php [L]
+RewriteRule ^controller/signup\.php$ controller/Auth/signup.php [L]
+RewriteRule ^controller/verify_email\.php$ controller/Auth/verify_email.php [L]
+RewriteRule ^controller/get_profile\.php$ controller/User/get_profile.php [L]
+RewriteRule ^controller/update_profile\.php$ controller/User/update_profile.php [L]
+RewriteRule ^controller/get_fullname\.php$ controller/User/get_fullname.php [L]
+RewriteRule ^controller/admin\.php$ controller/Admin/admin.php [L]
+RewriteRule ^controller/admin_stats\.php$ controller/Admin/admin_stats.php [L]
+RewriteRule ^controller/users_section\.php$ controller/Admin/users_section.php [L]
+RewriteRule ^controller/check_password\.php$ controller/Admin/Maintenance/check_password.php [L]
+RewriteRule ^controller/fix_passwords\.php$ controller/Admin/Maintenance/fix_passwords.php [L]
+RewriteRule ^controller/seed_users\.php$ controller/Admin/Maintenance/seed_users.php [L]
+RewriteRule ^controller/users\.php$ controller/Admin/Maintenance/users.php [L]
+RewriteRule ^controller/test\.php$ controller/Admin/Diagnostics/test.php [L]
+RewriteRule ^controller/test_login\.php$ controller/Admin/Diagnostics/test_login.php [L]
+
 # Redirect legacy HTML paths to their PHP equivalents
 RewriteRule ^view/(login|index|admin|profile|clear_login)\.html$ view/$1.php [L]

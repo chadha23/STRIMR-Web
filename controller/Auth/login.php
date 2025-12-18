@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
-$logFile = __DIR__ . '/../login_debug.log';
+$logFile = __DIR__ . '/../../login_debug.log';
 
 // Debug: Log the request
 file_put_contents($logFile, date('Y-m-d H:i:s') . " - Login attempt\n", FILE_APPEND);
@@ -35,7 +35,7 @@ $loginPassword = isset($data['password']) ? trim($data['password']) : '';
 // Debug: Log before DB connection
 file_put_contents($logFile, date('Y-m-d H:i:s') . " - Login attempt for: " . $loginInput . "\n", FILE_APPEND);
 
-require_once __DIR__ . '/../model/User.php';
+require_once __DIR__ . '/../../model/User.php';
 
 try {
     $userModel = new User($conn);
