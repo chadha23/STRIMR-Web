@@ -178,6 +178,7 @@
                         <span class="btn-loader"></span>
                     </button>
 
+                    <div id="signup-inline-error" class="auth-message error" role="alert" aria-live="assertive"></div>
 
                     <!-- Login Link -->
                     <div class="auth-switch">
@@ -191,6 +192,17 @@
 
             <!-- Error/Success Message -->
             <div id="auth-message" class="auth-message"></div>
+        </div>
+    </div>
+
+    <div id="email-verify-modal" class="verify-modal" aria-hidden="true">
+        <div class="verify-modal__overlay" data-close-modal></div>
+        <div class="verify-modal__content" role="dialog" aria-labelledby="verify-modal-title" aria-describedby="verify-modal-text">
+            <button type="button" class="verify-modal__close" data-close-modal aria-label="Close verification notice">&times;</button>
+            <div class="verify-modal__icon">✉️</div>
+            <h2 id="verify-modal-title">Email Verification Sent</h2>
+            <p id="verify-modal-text">We sent a verification email to your inbox. Click Verify Email to activate your account.</p>
+            <button type="button" class="verify-modal__dismiss" data-close-modal>Close</button>
         </div>
     </div>
 

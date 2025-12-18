@@ -6,22 +6,41 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+mail_error.log
+login_debug.log
+signup_debug.log
+php_errors.log
 
+# Dependencies / builds
 node_modules
 dist
 dist-ssr
-*.local
+vendor/
 
-# Editor directories and files
+# Environment / secrets
+.env
+.env.local
+.env.example
+
+# SMTP / Mail config (contains app password)
+core/config/mail.php
+
+# Editor directories & files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
+Desktop.ini
+
+# PHP / project junk
+*.cache
+*.tmp
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.local
 
-
-
+# OS / misc

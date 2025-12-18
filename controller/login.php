@@ -39,7 +39,7 @@ require_once __DIR__ . '/../model/db.php';
 
 try {
     $stmt = $conn->prepare(
-        "SELECT id, username, password, email FROM users WHERE email = :input OR username = :input"
+        "SELECT id, username, password, email, is_verified FROM users WHERE email = :input OR username = :input"
     );
     $stmt->execute([':input' => $loginInput]);
     $users = $stmt->fetchAll();
@@ -73,6 +73,20 @@ try {
     
         // CRITICAL: Verify password - only allow login if password is correct
         if (password_verify($loginPassword, $user['password'])) {
+            $isVerified = isset($user['is_verified']) ? (int)$user['is_verified'] : 0;
+            if ($isVerified === 0) {
+                file_put_contents(
+                    $logFile,
+                    "Attempted login for unverified user: " . $user['email'] . "\n",
+                    FILE_APPEND
+                );
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Please verify your email before logging in.'
+                ]);
+                exit();
+            }
             // Password is correct - user exists AND password matches
             unset($user['password']); // Don't return password hash
             session_start();

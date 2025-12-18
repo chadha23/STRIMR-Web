@@ -30,6 +30,7 @@ function switchToSignup() {
     
     // Clear any messages
     hideMessage();
+    hideSignupInlineError();
     
     // Clear login form
     document.getElementById('loginForm').reset();
@@ -54,6 +55,7 @@ function switchToLogin() {
     
     // Clear any messages
     hideMessage();
+    hideSignupInlineError();
     
     // Clear signup form
     document.getElementById('signupForm').reset();
@@ -134,6 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('Login form not found!');
     }
+
+    const modal = document.getElementById('email-verify-modal');
+    if (modal) {
+        modal.querySelectorAll('[data-close-modal]').forEach(element => {
+            element.addEventListener('click', hideVerificationModal);
+        });
+    }
 });
 
 // ============================================
@@ -166,6 +175,46 @@ function hideMessage() {
     const messageDiv = document.getElementById('auth-message');
     messageDiv.classList.remove('show');
     messageDiv.textContent = '';
+}
+
+function showSignupInlineError(message) {
+    const inlineError = document.getElementById('signup-inline-error');
+    if (!inlineError) {
+        return;
+    }
+    inlineError.textContent = message;
+    inlineError.classList.add('show');
+}
+
+function hideSignupInlineError() {
+    const inlineError = document.getElementById('signup-inline-error');
+    if (!inlineError) {
+        return;
+    }
+    inlineError.textContent = '';
+    inlineError.classList.remove('show');
+}
+
+// ============================================
+// VERIFICATION MODAL
+// ============================================
+
+function showVerificationModal() {
+    const modal = document.getElementById('email-verify-modal');
+    if (!modal) {
+        return;
+    }
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+}
+
+function hideVerificationModal() {
+    const modal = document.getElementById('email-verify-modal');
+    if (!modal) {
+        return;
+    }
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
 }
 
 // ============================================
@@ -423,6 +472,7 @@ function handleLogin(event) {
  */
 function handleSignup(event) {
     event.preventDefault();
+    hideSignupInlineError();
     
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
@@ -492,30 +542,50 @@ function handleSignup(event) {
     })
     .then(result => {
         console.log('=== SIGNUP RESPONSE DEBUG ===', result);
+        hideSignupInlineError();
+        
+        if (result.data && result.data.code === 'EMAIL_NOT_VERIFIED') {
+            hideMessage();
+            if (submitBtn) {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+            showSignupInlineError('Email not verified. Please check your inbox and click Verify Email.');
+            return;
+        }
         
         if (result.ok && result.data && result.data.success) {
-            showMessage('Account created! You can now log in with password 123.', 'success');
-            document.getElementById('signupForm').reset();
-            submitBtn.classList.remove('loading');
-            submitBtn.disabled = false;
-            
-            // Switch back to login after a short delay
-            setTimeout(() => {
-                switchToLogin();
-                document.getElementById('login-email').value = email;
-            }, 1200);
+            hideMessage();
+            if (form) {
+                form.reset();
+            }
+            const matchIndicator = document.getElementById('password-match');
+            if (matchIndicator) {
+                matchIndicator.textContent = '';
+                matchIndicator.className = 'password-match';
+            }
+            if (submitBtn) {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+            showVerificationModal();
         } else {
             const errorMsg = (result.data && result.data.error) || 'Signup failed. Please try again.';
             showMessage(errorMsg, 'error');
-            submitBtn.classList.remove('loading');
-            submitBtn.disabled = false;
+            if (submitBtn) {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
         }
     })
     .catch(error => {
         console.error('Signup error:', error);
         showMessage('Connection error. Please try again.', 'error');
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
+        hideSignupInlineError();
+        if (submitBtn) {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+        }
     });
 }
 
