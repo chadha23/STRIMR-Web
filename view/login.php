@@ -208,7 +208,7 @@
 
     <script>
         // Inline script to verify page is loading
-        console.log('=== login.html PAGE LOADED ===');
+        console.log('=== login.php PAGE LOADED ===');
         console.log('Checking for login-script.js...');
         
         // Check if script loaded

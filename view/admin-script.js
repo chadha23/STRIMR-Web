@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // TODO: Add admin authentication check
     // const adminToken = localStorage.getItem('adminToken');
     // if (!adminToken) {
-    //     window.location.href = 'login.html';
+    //     window.location.href = 'login.php';
     //     return;
     // }
     
@@ -543,7 +543,7 @@ function handleAdminLogout() {
         // localStorage.clear();
 
         // Redirect to login
-        window.location.href = 'login.html';
+        window.location.href = 'login.php';
     }
 }
 

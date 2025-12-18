@@ -17,7 +17,7 @@
             
             document.getElementById('status').innerHTML = 
                 '<p style="color: green;">All login data cleared!</p>' +
-                '<p>You can now go back to <a href="login.html">login.html</a></p>';
+                '<p>You can now go back to <a href="login.php">login.php</a></p>';
         }
         
         // Show current data

@@ -68,7 +68,7 @@ $update->execute();
     <div class="container">
         <h1>Email verified</h1>
         <p>Your account has been verified. You can now log in.</p>
-        <a class="button" href="../view/login.html">Go to login</a>
+        <a class="button" href="../view/login.php">Go to login</a>
     </div>
 </body>
 </html>

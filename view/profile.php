@@ -142,13 +142,13 @@
 
         // If not logged in, go back to login
         if (!token || !userId) {
-            window.location.href = 'login.html';
+            window.location.href = 'login.php';
             return;
         }
 
         // Back button
         document.getElementById('btn-back').addEventListener('click', () => {
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         });
 
         // Fetch profile data

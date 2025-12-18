@@ -71,7 +71,7 @@ const mockPosts = [
  * 4. Shows the selected page
  * 
  * Called when: User clicks a navigation button at the top
- * Location in HTML: Top navigation bar (lines 800-815 in index.html)
+ * Location in HTML: Top navigation bar (lines 800-815 in index.php)
  */
 function switchPage(page) {
     currentPage = page;
@@ -112,7 +112,7 @@ function switchPage(page) {
  * 4. Resets to first channel
  * 
  * TODO: Add PHP backend call to load channels for this server
- * Location in HTML: Servers sidebar (lines 825-842 in index.html)
+ * Location in HTML: Servers sidebar (lines 825-842 in index.php)
  */
 function selectServer(serverId, element) {
     currentServer = serverId;
@@ -161,7 +161,7 @@ function selectServer(serverId, element) {
  * 5. Loads messages for this channel
  * 
  * TODO: Add PHP backend call to load messages for this channel
- * Location in HTML: Channels sidebar (lines 852-855 in index.html)
+ * Location in HTML: Channels sidebar (lines 852-855 in index.php)
  */
 function selectChannel(channelId, element) {
     currentChannel = channelId;
@@ -203,7 +203,7 @@ function selectChannel(channelId, element) {
  * 5. Scrolls to bottom
  * 
  * Called when: Messages are loaded or a new message is sent
- * Location in HTML: Messages container (line 872 in index.html)
+ * Location in HTML: Messages container (line 872 in index.php)
  */
 function renderMessages() {
     const container = document.getElementById('messages-container');
@@ -250,7 +250,7 @@ function renderMessages() {
  * 
  * TODO: Send message to PHP backend instead of just adding locally
  * Called when: User clicks Send button or presses Enter
- * Location in HTML: Send button (line 888 in index.html)
+ * Location in HTML: Send button (line 888 in index.php)
  */
 function sendMessage() {
     const input = document.getElementById('message-input');
@@ -302,7 +302,7 @@ function sendMessage() {
  * - Allows Shift+Enter for new lines
  * 
  * Called when: User types in message input field
- * Location in HTML: Message input (line 884 in index.html)
+ * Location in HTML: Message input (line 884 in index.php)
  */
 function handleKeyPress(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -331,7 +331,7 @@ function handleKeyPress(event) {
  * 5. Adds click handler to open stream
  * 
  * Called when: Stream page loads or search is performed
- * Location in HTML: Streams grid (line 910 in index.html)
+ * Location in HTML: Streams grid (line 910 in index.php)
  */
 function renderStreams(streamList = streams) {
     const container = document.getElementById('streams-grid');
@@ -380,7 +380,7 @@ function renderStreams(streamList = streams) {
  * 4. Renders filtered results
  * 
  * Called when: User types in search bar
- * Location in HTML: Stream search input (line 905 in index.html)
+ * Location in HTML: Stream search input (line 905 in index.php)
  */
 function searchStreams(event) {
     const query = event.target.value.toLowerCase().trim();
@@ -418,7 +418,7 @@ function searchStreams(event) {
  * 4. Appends posts to container
  * 
  * Called when: Feed page loads or a new post is created
- * Location in HTML: Posts container (line 943 in index.html)
+ * Location in HTML: Posts container (line 943 in index.php)
  */
 function renderPosts() {
     const container = document.getElementById('posts-container');
@@ -472,7 +472,7 @@ function renderPosts() {
  * 
  * TODO: Send post to PHP backend
  * Called when: User clicks Tweet button
- * Location in HTML: Tweet button (line 938 in index.html)
+ * Location in HTML: Tweet button (line 938 in index.php)
  */
 function createPost() {
     const input = document.getElementById('compose-input');
@@ -587,7 +587,7 @@ function checkAuth() {
     
     if (!token) {
         // User not logged in, redirect to login page
-        window.location.href = 'login.html';
+        window.location.href = 'login.php';
         return false;
     }
     
@@ -607,7 +607,7 @@ function checkAuth() {
 }
 
 function openProfilePage() {
-    window.location.href = 'profile.html';
+    window.location.href = 'profile.php';
 }
 
 /**
@@ -623,7 +623,7 @@ function handleLogout() {
         localStorage.removeItem('userName');
         
         // Redirect to login page
-        window.location.href = 'login.html';
+        window.location.href = 'login.php';
     }
 }
 
@@ -659,4 +659,5 @@ function init() {
 
 // Start the application when page loads
 init();
+
 

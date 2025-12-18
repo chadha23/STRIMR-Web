@@ -222,7 +222,7 @@ if (isset($loadError)) {
 
             <div class="actions">
                 <a class="btn" href="fix_passwords.php">Fix passwords</a>
-                <a class="btn secondary" href="../view/login.html">Go to login page</a>
+                <a class="btn secondary" href="../view/login.php">Go to login page</a>
             </div>
         </div>
     </div>

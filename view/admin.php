@@ -417,7 +417,7 @@
         </div>
     </div>
 <script>
-// Add this at the top of your admin.html, before other scripts
+// Add this at the top of your admin.php, before other scripts
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== ADMIN PAGE LOADED ===');
 
@@ -429,8 +429,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // If something is missing OR not admin → kick back to login
     if (!token || !userId || !username || !isAdmin) {
-        console.log('No valid admin session, redirecting to login.html');
-        window.location.href = 'login.html';
+        console.log('No valid admin session, redirecting to login.php');
+        window.location.href = 'login.php';
         return;
     }
 

@@ -427,9 +427,9 @@ function handleLogin(event) {
         // Redirect based on admin status
         setTimeout(() => {
             if (result.data.isAdmin === true) {
-                window.location.href = 'admin.html'; // Redirect admin to dashboard
+                window.location.href = 'admin.php'; // Redirect admin to dashboard
             } else {
-                window.location.href = 'index.html'; // Redirect normal user to main app
+                window.location.href = 'index.php'; // Redirect normal user to main app
             }
         }, 500);
         
@@ -624,11 +624,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const isAdmin = localStorage.getItem('isAdmin') === 'true';
         
         if (isAdmin) {
-            console.log('Admin user detected, redirecting to admin.html');
-            window.location.href = 'admin.html'; // Redirect admin to dashboard
+            console.log('Admin user detected, redirecting to admin.php');
+            window.location.href = 'admin.php'; // Redirect admin to dashboard
         } else {
-            console.log('Normal user detected, redirecting to index.html');
-            window.location.href = 'index.html'; // Redirect normal user to main app
+            console.log('Normal user detected, redirecting to index.php');
+            window.location.href = 'index.php'; // Redirect normal user to main app
         }
         return;
     } else {
