@@ -10,14 +10,14 @@ class PostController {
     // Get all posts with user information
     public function getAllPosts() {
         $sql = "SELECT 
-                    Posts.id,
-                    Posts.author_id,
-                    Posts.content,
-                    Posts.created_at,
-                    IFNULL(Users.username, 'Unknown') AS username
-                FROM Posts
-                LEFT JOIN Users ON Users.id = Posts.author_id
-                ORDER BY Posts.created_at DESC";
+                    posts.id,
+                    posts.author_id,
+                    posts.content,
+                    posts.created_at,
+                    IFNULL(users.username, 'Unknown') AS username
+                FROM posts
+                LEFT JOIN users ON users.id = posts.author_id
+                ORDER BY posts.created_at DESC";
         
         $db = Config::getConnexion();
         try {
@@ -41,7 +41,7 @@ class PostController {
         // Generate a unique ID for the post (varchar(100))
         $postId = $this->generateId('post');
         
-        $sql = "INSERT INTO Posts (id, author_id, content, created_at) 
+        $sql = "INSERT INTO posts (id, author_id, content, created_at) 
                 VALUES (:id, :author_id, :content, NOW())";
         
         $db = Config::getConnexion();
@@ -85,7 +85,7 @@ class PostController {
 
     // Delete a post
     public function deletePost($id) {
-        $sql = "DELETE FROM Posts WHERE id = :id";
+        $sql = "DELETE FROM posts WHERE id = :id";
         
         $db = Config::getConnexion();
         try {
@@ -107,9 +107,9 @@ class PostController {
                     Posts.content,
                     Posts.created_at,
                     IFNULL(Users.username, 'Unknown') AS username
-                FROM Posts
-                LEFT JOIN Users ON Users.id = Posts.author_id
-                WHERE Posts.id = :id";
+                FROM posts
+                LEFT JOIN users ON users.id = posts.author_id
+                WHERE posts.id = :id";
         
         $db = Config::getConnexion();
         try {
@@ -134,7 +134,7 @@ class PostController {
         }
         
         // User doesn't exist, create it
-        $sql = "INSERT INTO Users (id, username, email, password_hash, created_at) 
+        $sql = "INSERT INTO users (id, username, email, password_hash, created_at) 
                 VALUES (:id, :username, :email, :password_hash, NOW())";
         
         $query = $db->prepare($sql);
