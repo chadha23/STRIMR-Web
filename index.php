@@ -4,6 +4,9 @@
 session_start();
 define('BASE_PATH', __DIR__);
 
+// Integration: Chadha User Module
+require_once BASE_PATH . '/modules/chadha/integration.php';
+
 // Autoload
 spl_autoload_register(function ($class) {
     $paths = [
@@ -40,6 +43,11 @@ $routes = [
     'logout'    => ['AuthController',     'logout',     null],
     'dashboard' => ['DashboardController','index',     null],
     'go-live'   => ['DashboardController','goLive',    null],
+    
+    // Chadha User Module Routes
+    'user-login'    => ['ChadhaController', 'showLogin',    null],
+    'user-profile'  => ['ChadhaController', 'showProfile',  null],
+    'user-auth'     => ['ChadhaController', 'authenticate', null],
     'watch'     => ['StreamController',   'watch',      'dynamic'], // Paramètre dynamique
     'profile'   => ['PointsController',   'profile',    null],
     'purchase'  => ['PointsController',   'purchase',   null],
