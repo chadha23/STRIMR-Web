@@ -1,4 +1,15 @@
 <?php 
+session_start();
+require_once __DIR__ . '/../../../Controller/AuthController.php';
+
+$authController = new AuthController();
+
+// Require admin login
+if (!$authController->isLoggedIn() || !$authController->isAdmin()) {
+    header('Location: ../auth/index.php');
+    exit();
+}
+
 require_once __DIR__.'/../../../Controller/PostController.php';
 require_once __DIR__.'/../../../Controller/ReactionController.php';
 require_once __DIR__.'/../../../Controller/CommentController.php';
@@ -26,11 +37,11 @@ $list = $postC->getAllPosts();
             </div>
 
             <nav class="sidebar-nav">
-                <a href="../dashboard/index.html" class="nav-link" data-section-target="dashboard-section">
+                <a href="../dashboard/index.php" class="nav-link" data-section-target="dashboard-section">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a href="../users/index.html" class="nav-link" data-section-target="users-section">
+                <a href="../users/index.php" class="nav-link" data-section-target="users-section">
                     <span class="nav-icon">👥</span>
                     <span class="nav-text">Users</span>
                 </a>
@@ -38,33 +49,29 @@ $list = $postC->getAllPosts();
                     <span class="nav-icon">💬</span>
                     <span class="nav-text">Servers</span>
                 </a>
-                <a href="../messages/index.html" class="nav-link" data-section-target="messages-section">
+                <a href="../messages/index.php" class="nav-link" data-section-target="messages-section">
                     <span class="nav-icon">💌</span>
                     <span class="nav-text">Messages</span>
                 </a>
-                <a href="../streams/index.html" class="nav-link" data-section-target="streams-section">
+                <a href="../streams/index.php" class="nav-link" data-section-target="streams-section">
                     <span class="nav-icon">📺</span>
                     <span class="nav-text">Streams</span>
                 </a>
-                <a href="../posts/index.php" class="nav-link active" data-section-target="posts-section">
+                <a href="index.php" class="nav-link active" data-section-target="posts-section">
                     <span class="nav-icon">🐦</span>
                     <span class="nav-text">Posts</span>
                 </a>
-                <a href="../events/index.html" class="nav-link" data-section-target="events-section">
+                <a href="../events/index.php" class="nav-link" data-section-target="events-section">
                     <span class="nav-icon">📅</span>
                     <span class="nav-text">Events</span>
-                </a>
-                <a href="../settings/index.html" class="nav-link" data-section-target="settings-section">
-                    <span class="nav-icon">⚙️</span>
-                    <span class="nav-text">Settings</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <button class="logout-btn" type="button" data-template-action="admin-logout">
+                <a href="../auth/logout.php" class="logout-btn" style="text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: #ed4245; background: transparent; border: none; cursor: pointer; width: 100%; border-radius: 8px; transition: background 0.2s;">
                     <span class="nav-icon">🚪</span>
                     <span class="nav-text">Logout</span>
-                </button>
+                </a>
             </div>
         </aside>
 

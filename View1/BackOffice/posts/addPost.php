@@ -113,7 +113,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             </div>
 
             <nav class="sidebar-nav">
-                <a href="../dashboard/index.html" class="nav-link">
+                <a href="../dashboard/index.php" class="nav-link">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Dashboard</span>
                 </a>
