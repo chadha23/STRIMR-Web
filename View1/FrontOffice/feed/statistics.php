@@ -2,6 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Authentication check
+require_once __DIR__ . '/../includes/auth_check.php';
+
 require_once __DIR__ . '/../../../Controller/StatisticsController.php';
 
 $statsController = new StatisticsController();

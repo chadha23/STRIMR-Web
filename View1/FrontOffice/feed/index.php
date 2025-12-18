@@ -2,6 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Authentication check
+require_once __DIR__ . '/../includes/auth_check.php';
+
 require_once __DIR__ . '/../../../Controller/PostController.php';
 require_once __DIR__ . '/../../../Controller/ReactionController.php';
 require_once __DIR__ . '/../../../Controller/CommentController.php';
@@ -14,7 +17,7 @@ $postC = new PostController();
 $reactionC = new ReactionController();
 $commentC = new CommentController();
 
-$authorId = '1'; // User ID from database (varchar)
+$authorId = $currentUser['id']; // Use logged-in user's ID
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
 
@@ -178,6 +181,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
             </a>
         </div>
     </nav>
+
+    <!-- Profile Component -->
+    <?php require_once __DIR__ . '/../includes/profile_component.php'; ?>
 
     <!-- ============================================
          FEED PAGE - STANDALONE TEMPLATE

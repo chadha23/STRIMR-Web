@@ -1,4 +1,7 @@
 <?php
+// Authentication check
+require_once __DIR__ . '/../includes/auth_check.php';
+
 require_once __DIR__ . '/../../../Controller/PostController.php';
 
 $postController = new PostController();
