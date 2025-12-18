@@ -1,0 +1,16 @@
+<?php
+// Authentication check - include this at the top of every protected page
+session_start();
+require_once __DIR__ . '/../../../Controller/AuthController.php';
+
+$authController = new AuthController();
+
+// If not logged in, redirect to login page
+if (!$authController->isLoggedIn()) {
+    header('Location: ../auth/index.php');
+    exit();
+}
+
+// Get current user info
+$currentUser = $authController->getCurrentUser();
+?>
