@@ -1,2 +1,2 @@
-﻿# STRIMR-Web
-esprit projet web 2eme 
+# STRIMR-Web
+esprit projet web 2eme
