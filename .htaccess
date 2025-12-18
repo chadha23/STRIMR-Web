@@ -1,0 +1,14 @@
+# .htaccess – VERSION ULTIME XAMPP 2025 (testée et approuvée)
+RewriteEngine On
+RewriteBase /STRIMR/STRIMR-Web/
+
+# 1. Autorise TOUS les fichiers du dossier assets/ (css, js, img, fonts…)
+RewriteRule ^assets/ - [L]
+
+# 2. Si le fichier ou dossier existe vraiment → le servir directement
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 3. Tout le reste → rediriger vers index.php
+RewriteRule ^(.*)$ index.php [L]
