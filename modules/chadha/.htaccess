@@ -1,0 +1,4 @@
+﻿RewriteEngine On
+
+# Redirect legacy HTML paths to their PHP equivalents
+RewriteRule ^view/(login|index|admin|profile|clear_login)\.html$ view/$1.php [L]
