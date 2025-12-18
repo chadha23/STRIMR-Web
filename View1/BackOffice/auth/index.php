@@ -1,0 +1,220 @@
+<?php
+session_start();
+require_once __DIR__ . '/../../../Controller/AuthController.php';
+
+$authController = new AuthController();
+
+// If already logged in as admin, redirect to dashboard
+if ($authController->isLoggedIn() && $authController->isAdmin()) {
+    header('Location: ../dashboard/index.php');
+    exit();
+}
+
+$message = '';
+$messageType = '';
+
+// Handle admin login
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action']) && $_POST['action'] === 'admin_login') {
+        $email = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        
+        if (empty($email) || empty($password)) {
+            $message = 'Email and password are required';
+            $messageType = 'error';
+        } else {
+            $result = $authController->adminLogin($email, $password);
+            if ($result['success']) {
+                header('Location: ../dashboard/index.php');
+                exit();
+            } else {
+                $message = $result['message'];
+                $messageType = 'error';
+            }
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - STRIMR Back Office</title>
+    <link rel="stylesheet" href="../../FrontOffice/login-styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            padding: 20px;
+        }
+        .auth-card {
+            background: rgba(30, 30, 46, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .auth-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .auth-subtitle {
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            color: #b9bbbe;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .required {
+            color: #ed4245;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #5865f2;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #5865f2;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        .submit-btn:hover {
+            background: #4752c4;
+        }
+        .auth-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .auth-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        .auth-message.success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+        .admin-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(237, 66, 69, 0.2);
+            border: 1px solid rgba(237, 66, 69, 0.4);
+            border-radius: 12px;
+            color: #ed4245;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Admin Login</h1>
+                <p class="auth-subtitle">Access the STRIMR Back Office</p>
+                <span class="admin-badge">Administrator Only</span>
+            </div>
+
+            <!-- Message Display -->
+            <?php if ($message): ?>
+                <div id="auth-message" class="auth-message <?php echo $messageType; ?>">
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- ADMIN LOGIN FORM -->
+            <form id="adminLoginForm" method="POST">
+                <input type="hidden" name="action" value="admin_login">
+                
+                <div class="form-group">
+                    <label for="admin-email" class="form-label">
+                        ADMIN EMAIL
+                        <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        id="admin-email" 
+                        name="email"
+                        class="form-input"
+                        placeholder="admin@strimr.com"
+                        required
+                        autocomplete="email"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="admin-password" class="form-label">
+                        ADMIN PASSWORD
+                        <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        id="admin-password" 
+                        name="password"
+                        class="form-input"
+                        placeholder="Enter admin password"
+                        required
+                        autocomplete="current-password"
+                    />
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span class="btn-text">Login as Admin</span>
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <a href="../../FrontOffice/auth/index.php" style="color: #5865f2; text-decoration: none; font-size: 14px;">
+                    ← Back to User Login
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
